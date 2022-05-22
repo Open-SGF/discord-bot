@@ -3,11 +3,24 @@ import { fetchNextEventForGroup, formatEventMessage } from "./meetupHelpers";
 import { Client, Intents } from 'discord.js';
 
 config();
+
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 const sendAnnouncement = async (channel) => {
-	const response = await fetchNextEventForGroup(process.env.MEETUP_GROUP_ID);
-	channel.send(formatEventMessage(response));
+	const event = await fetchNextEventForGroup(34547654);
+ 
+	channel.send(formatEventMessage(event));
+  
+  // const nextRun = (time) => {
+  //   let timer = setTimeout(async () => {
+  //     clearTimeout(timer);
+  //     timer = null;
+  //     await sendAnnouncement(chan);
+  //     timer = nextRun(time);
+  //   }, time);
+  //
+  //   return timer;
+  // };
 };
 
 client.on('ready', () => {
@@ -19,5 +32,3 @@ client.on('ready', () => {
 });
 
 client.login(process.env.LOGIN_TOKEN);
-
-
