@@ -10,6 +10,14 @@ const sendAnnouncement = async (channel) => {
 	const event = await fetchNextEventForGroup(34547654);
  
 	channel.send(formatEventMessage(event));
+};
+
+client.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}!`);
+  
+  const channel = client.channels.cache.get(process.env.ANNOUNCEMENT_CHANNEL);
+
+  sendAnnouncement(channel);
   
   // const nextRun = (time) => {
   //   let timer = setTimeout(async () => {
@@ -21,14 +29,6 @@ const sendAnnouncement = async (channel) => {
   //
   //   return timer;
   // };
-};
-
-client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
-  
-  const channel = client.channels.cache.get(process.env.ANNOUNCEMENT_CHANNEL);
-
-  sendAnnouncement(channel);
 });
 
 client.login(process.env.LOGIN_TOKEN);
