@@ -1,4 +1,4 @@
-export function joinArrayHumanReadable (array) {
+function joinArrayHumanReadable (array) {
   let text = '';
   
   for (let i = 0; i < array.length; i++) {
@@ -22,3 +22,5 @@ export function joinArrayHumanReadable (array) {
   
   return text;
 }
+
+module.exports = { joinArrayHumanReadable }

@@ -1,6 +1,6 @@
-import { config } from 'dotenv';
-import { fetchNextEventForGroup, formatEventMessage } from "./meetupHelpers";
-import { Client, Intents } from 'discord.js';
+const { config } = require('dotenv');
+const { fetchNextEventForGroup, formatEventMessage } = require("./meetupHelpers");
+const { Client, Intents } = require('discord.js');
 
 config();
 
