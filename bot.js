@@ -8,6 +8,11 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 const sendAnnouncement = async (channel) => {
 	const event = await fetchNextEventForGroup(34547654);
+  
+  if (!event) {
+    console.log('No upcoming events found.');
+    return
+  }
  
 	channel.send(formatEventMessage(event));
 };
@@ -18,17 +23,6 @@ client.on('ready', () => {
   const channel = client.channels.cache.get(process.env.ANNOUNCEMENT_CHANNEL);
 
   sendAnnouncement(channel);
-  
-  // const nextRun = (time) => {
-  //   let timer = setTimeout(async () => {
-  //     clearTimeout(timer);
-  //     timer = null;
-  //     await sendAnnouncement(chan);
-  //     timer = nextRun(time);
-  //   }, time);
-  //
-  //   return timer;
-  // };
 });
 
 client.login(process.env.LOGIN_TOKEN);

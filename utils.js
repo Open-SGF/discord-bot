@@ -1,26 +1,7 @@
 function joinArrayHumanReadable (array) {
-  let text = '';
-  
-  for (let i = 0; i < array.length; i++) {
-    if (i === 0) {
-      text += array[i];
-      continue
-    }
-    
-    if (array.length === 2) {
-      text += ` and ${array[i]}`
-      continue
-    }
-    
-    if (i === array.length - 1) {
-      text += `, and ${array[i]}`
-      continue
-    }
-    
-    text += `, ${array[i]}`;
-  }
-  
-  return text;
+  if (array.length <= 2) { return array.join(' and '); }
+  const rest = array.pop();
+  return array.join(', ') + ', and ' + rest;
 }
 
 module.exports = { joinArrayHumanReadable }

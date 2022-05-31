@@ -30,21 +30,32 @@ async function fetchNextEventForGroup (groupId) {
     }
   }`;
   
-  const response = await fetch.default('https://api.meetup.com/gql', {
-    method: 'post',
-    body: JSON.stringify({query, variables}),
-    headers: {'Content-Type': 'application/json'}
-  });
+  try {
+    const response = await fetch.default('https://api.meetup.com/gql', {
+      method: 'post',
+      body: JSON.stringify({query, variables}),
+      headers: {'Content-Type': 'application/json'}
+    });
+    
+    const data = await response.json();
+    
+    return data.data.group.upcomingEvents.edges[0].node;
+  } catch (e) {
+    // return undefined
+  }
   
-  const data = await response.json();
-  
-  return data.data.group.upcomingEvents.edges[0].node;
 }
 
 function formatEventMessage ({ shortUrl, tickets}) {
-  const userNames = tickets.edges.map(ticket => ticket.node.user.name);
+  let namesText = '';
   
-  const namesText = joinArrayHumanReadable(userNames)
+  if (!tickets) {
+    namesText = 'us';
+  } else {
+    const userNames = tickets.edges.map(ticket => ticket.node.user.name);
+  
+    namesText = joinArrayHumanReadable(userNames)
+  }
   
   return `Join ${namesText} at our event this evening! ${shortUrl}`
 }
