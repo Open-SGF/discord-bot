@@ -1,8 +1,7 @@
-const { joinArrayHumanReadable } = require('./utils');
+import { joinArrayHumanReadable } from './utils.js';
+import fetch from 'node-fetch';
 
-async function fetchNextEventForGroup (groupId) {
-  const fetch = await import('node-fetch');
-  
+export async function fetchNextEventForGroup (groupId) {
   const variables = { groupId }
   
   const query = `query GetUpcomingEventsForGroup ($groupId: ID) {
@@ -46,7 +45,7 @@ async function fetchNextEventForGroup (groupId) {
   
 }
 
-function formatEventMessage ({ shortUrl, tickets}) {
+export function formatEventMessage ({ shortUrl, tickets}) {
   let namesText = '';
   
   if (!tickets) {
@@ -59,5 +58,3 @@ function formatEventMessage ({ shortUrl, tickets}) {
   
   return `Join ${namesText} at our event this evening! ${shortUrl}`
 }
-
-module.exports = { fetchNextEventForGroup, formatEventMessage }

@@ -5,8 +5,9 @@
     "dotenv": "^16.0.0",
     "node-fetch": "^3.2.4"
   },
-  "engines" : {
-    "npm" : ">=8.0.0",
-    "node" : ">=16.0.0"
-  }
+  "engines": {
+    "npm": ">=8.0.0",
+    "node": ">=16.0.0"
+  },
+  "type": "module"
 }
