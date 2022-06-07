@@ -40,7 +40,8 @@ export async function fetchNextEventForGroup (groupId) {
     
     return data.data.group.upcomingEvents.edges[0].node;
   } catch (e) {
-    // return undefined
+    console.error(e)
+    return null
   }
   
 }
