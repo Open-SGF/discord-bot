@@ -1,37 +1,28 @@
-require('dotenv').config();
-const { Client, Intents } = require('discord.js');
+import { config } from 'dotenv';
+import { fetchNextEventForGroup, formatEventMessage } from './meetupHelpers.js';
+import { Client, Intents } from 'discord.js';
+
+config();
+
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
-const fetchMeetupData = async () => {
-	// fetch stuff here
-};
-
 const sendAnnouncement = async (channel) => {
-	await fetchMeetupData();
-	channel.send('data fetched');
+	const event = await fetchNextEventForGroup(34547654);
+  
+  if (!event) {
+    console.log('No upcoming events found.');
+    return
+  }
+ 
+	channel.send(formatEventMessage(event));
 };
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
-  const chan = client.channels.cache.get(process.env.ANNOUNCEMENT_CHANNEL);
+  
+  const channel = client.channels.cache.get(process.env.ANNOUNCEMENT_CHANNEL);
 
-  // Poll for meetup data every day, if there's an event that day
-  // then go ahead and make the announcement
-
-  sendAnnouncement(chan);
-
-  const nextRun = (time) => {
-    let timer = setTimeout(async () => {
-       clearTimeout(timer);
-       timer = null;
-       await sendAnnouncement(chan);
-       timer = nextRun(time);
-    }, time);
-
-    return timer;
-  };
-
-  nextRun(3 * 1000);
+  sendAnnouncement(channel);
 });
 
 client.login(process.env.LOGIN_TOKEN);
