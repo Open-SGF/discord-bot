@@ -2,10 +2,12 @@
 To send notification messages to various discord channels, reminding people that there is an event today.
 
 ## Tools Used
-- Node
+- [NodeJS](https://nodejs.org/en/)
+- [Discord's API](https://discord.com/developers/docs/intro)
+- [Meetup's API](https://www.meetup.com/api/general/)
 
 ## Setting Up your Environment
-- Install Node 16.
+- Install the latest stable version of [NodeJS](https://nodejs.org/en/).
 - Install the dependencies with `npm install`
 - Then, run the development server with `npm run start`
 
