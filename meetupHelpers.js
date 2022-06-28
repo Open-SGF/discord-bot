@@ -1,5 +1,29 @@
-import { joinArrayHumanReadable } from './utils.js';
 import fetch from 'node-fetch';
+import { joinArrayHumanReadable } from './utils.js';
+
+export async function fetchTodaysEvent () {
+  const nextEvent = await fetchNextEventForGroup(34547654)
+  
+  const eventDate = nextEvent.dateTime.split('T')[0]
+  
+  const now = new Date();
+  
+  const todayArray = [now.getFullYear(), now.getMonth() + 1, now.getDate()]
+  
+  if (todayArray[1] < 10) {
+    todayArray[1] = `0${todayArray[1]}`
+  }
+  
+  if (todayArray[2] < 10) {
+    todayArray[2] = `0${todayArray[2]}`
+  }
+  
+  if (eventDate !== todayArray.join('-')) {
+    return null
+  }
+  
+  return nextEvent
+}
 
 export async function fetchNextEventForGroup (groupId) {
   const variables = { groupId }
@@ -30,7 +54,7 @@ export async function fetchNextEventForGroup (groupId) {
   }`;
   
   try {
-    const response = await fetch.default('https://api.meetup.com/gql', {
+    const response = await fetch('https://api.meetup.com/gql', {
       method: 'post',
       body: JSON.stringify({query, variables}),
       headers: {'Content-Type': 'application/json'}
