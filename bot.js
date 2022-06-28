@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
-import { formatEventMessage, fetchTodaysEvent } from './meetupHelpers.js';
+import { formatEventMessage, fetchTodaysEvent } from './lib/meetupHelpers.js';
 import { Client, Intents } from 'discord.js';
-import { checkEventIsNovel } from "./discordHelper.js";
+import { checkEventIsNovel } from "./lib/discordHelper.js";
 
 config();
 
