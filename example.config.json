@@ -1,0 +1,5 @@
+{
+    "discordBotToken": "<your token here>",
+    "tickRateInSeconds": 30,
+    "meetupGroupId": "34547654"
+}
