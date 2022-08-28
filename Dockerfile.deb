@@ -2,9 +2,11 @@ FROM debian:bullseye-slim
 
 RUN apt-get update && \
     apt-get -y install \
-        fakeroot \
+        binutils \
+        rubygems \ 
         squashfs-tools \
         wget && \
+    gem install fpm && \
     wget https://go.dev/dl/go1.19.linux-amd64.tar.gz && \
     tar -C /usr/local -xzf go1.19.linux-amd64.tar.gz
 

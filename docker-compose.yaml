@@ -6,4 +6,6 @@ services:
       build: 
         dockerfile: ./Dockerfile.deb
         context: .
-      entrypoint: ./build.sh
+      command: ./build.sh
+      stdin_open: true 
+      tty: true
