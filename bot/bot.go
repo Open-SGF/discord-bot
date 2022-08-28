@@ -105,8 +105,9 @@ func postNextEvent(session *discordgo.Session, guildID string) {
 }
 
 func shouldGetNextMeetupEvent(guildID string) bool {
-	now := time.Now()
-	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
+	loc, _ := time.LoadLocation("America/Chicago")
+	now := time.Now().In(loc)
+	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, loc)
 	nextWeekMonday := today.Add((time.Duration(int(time.Saturday)-int(now.Weekday())) + 2) * 24 * time.Hour).Add(10 * time.Hour)
 
 	// Use of goto is a bit funky with GO's variable
@@ -121,7 +122,7 @@ func shouldGetNextMeetupEvent(guildID string) bool {
 		}
 	}
 
-	fileName := fmt.Sprintf("./.%s_lastEventPosted", guildID)
+	fileName := fmt.Sprintf("./.%s_next_update", guildID)
 	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_RDWR, 0644)
 	if err != nil {
 		log.Println(err)
