@@ -11,7 +11,7 @@ events.
 
 ### Setup
 1. Copy `.example.config.json` to `config.json`
-2. Create your an Application [Discord Developers](https://discord.com/developers/applications)
+2. Create an Application [Discord Developers](https://discord.com/developers/applications)
 3. Add the Bot's token to `$.discordBotToken` in `.config.json`
 4. Create a Discord server, and invite the bot to the server
 
