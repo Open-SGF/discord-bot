@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"os"
 )
 
 var (
@@ -33,6 +34,10 @@ func ReadConfig() error {
 	}
 
 	DiscordBotToken = config.DiscordBotToken
+	if DiscordBotToken[0] == '$' {
+		DiscordBotToken = os.Getenv("OPENSGF_DISCORD_BOT_TOKEN")
+	}
+
 	TickRateInSeconds = config.TickRateInSeconds
 	MeetupGroupID = config.MeetupGroupID
 

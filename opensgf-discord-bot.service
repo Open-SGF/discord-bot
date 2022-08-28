@@ -1,0 +1,17 @@
+[Unit]
+Description=Open SGF Discord Bot
+After=network.target
+
+[Service]
+Type=exec
+User=opensgf
+Group=opensgf
+EnvironmentFile=/etc/opensgf-discord-bot/env
+ExecStart=/opt/opensgf-discord-bot/bin/opensgf-discord-bot
+RemainAfterExit=yes
+WorkingDirectory=/opt/opensgf-discord-bot/bin
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

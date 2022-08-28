@@ -1,5 +1,5 @@
 {
-    "discordBotToken": "<your token here>",
+    "discordBotToken": "$OPENSGF_DISCORD_BOT_TOKEN",
     "tickRateInSeconds": 30,
     "meetupGroupId": "34547654"
 }

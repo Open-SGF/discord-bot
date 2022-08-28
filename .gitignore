@@ -1,4 +1,5 @@
 .idea
 .*_lastEventPosted
 config.json
-bin
+build
+*.deb

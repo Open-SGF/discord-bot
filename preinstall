@@ -1,0 +1,11 @@
+PROJNAME=opensgf-discord-bot
+ETC_DIR=/etc/$PROJNAME
+ENV_FILE=$ETC_DIR/env
+PROG=/opt/$PROJNAME
+
+useradd -r -G opensgf opensgf
+
+mkdir -p $ETC_DIR
+touch $ENV_FILE
+chmod -R u+rwx,o-rwx $ETC_DIR
+chown -R opensgf:opensgf $ETC_DIR
