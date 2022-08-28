@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+    debian:
+      volumes:
+        - ./:/work
+      build: 
+        dockerfile: ./Dockerfile.deb
+        context: .
+      entrypoint: ./build.sh
