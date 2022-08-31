@@ -3,6 +3,7 @@ package bot
 import (
 	"bufio"
 	"discord-bot/config"
+	"discord-bot/meetup"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -89,7 +90,7 @@ func postNextEvent(session *discordgo.Session, guildID string) {
 
 	// TODO: Figure out some caching mechanism so we only fetch this once
 	// for all servers that need updating
-	meetupEvent := getNextMeetupEvent()
+	meetupEvent := meetup.GetNextMeetupEvent()
 
 	// Use: session.GuildScheduledEvents()
 	// To grab current events in discord, and see if our next fetched event is
@@ -168,58 +169,4 @@ func shouldGetNextMeetupEvent(guildID string) bool {
 	}
 
 	return false
-}
-
-func getNextMeetupEvent() string {
-
-	// TODO: Need to figure out how to use the Meetup API
-	// getNextMeetupEvent()
-
-	query := `{
-		"query": "query GetUpcomingEventsForGroup ($groupId: ID) {
-			group(id: $groupId) {
-				id,
-				name,
-				upcomingEvents (input: {first: 1}) {
-					edges {
-						node {
-							dateTime,
-							timezone,
-							shortUrl,
-							tickets {
-								edges {
-									node {
-										user {
-											name
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}",
-		"variables": {
-			"groupId": ` + config.MeetupGroupID + `
-		}
-	}`
-
-	reader := strings.NewReader(query)
-	// Need to add custom headers
-	// req = http.NewRequest()
-	// http.Do(req)
-	resp, err := http.Post("https://api.meetup.com/gql", "application/json", reader)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	resp.Body.Close()
-
-	// fmt.Printf("%s", body)
-	return string(body)
 }
