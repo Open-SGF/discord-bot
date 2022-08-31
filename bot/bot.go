@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"discord-bot/config"
 	"discord-bot/meetup"
+	"discord-bot/util"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -106,10 +107,8 @@ func postNextEvent(session *discordgo.Session, guildID string) {
 }
 
 func shouldGetNextMeetupEvent(guildID string) bool {
-	loc, _ := time.LoadLocation("America/Chicago")
-	now := time.Now().In(loc)
-	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, loc)
-	nextWeekMonday := today.Add((time.Duration(int(time.Saturday)-int(now.Weekday())) + 2) * 24 * time.Hour).Add(10 * time.Hour)
+	now := util.TimeNow("America/Chicago")
+	nextMondayTenAM := util.CalculateNextBlastDate(now, time.Monday, 10*time.Hour)
 
 	// Use of goto is a bit funky with GO's variable
 	// definitions, so opt for lambda instead
@@ -117,7 +116,7 @@ func shouldGetNextMeetupEvent(guildID string) bool {
 		// Make sure we're at the start of the file
 		f.Seek(0, 0)
 
-		_, err := f.WriteString(strconv.FormatInt(nextWeekMonday.Unix(), 10))
+		_, err := f.WriteString(strconv.FormatInt(nextMondayTenAM.Unix(), 10))
 		if err != nil {
 			log.Println(err)
 		}
