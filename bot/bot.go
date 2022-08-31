@@ -6,12 +6,9 @@ import (
 	"discord-bot/meetup"
 	"discord-bot/util"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
 	"os"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
