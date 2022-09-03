@@ -3,7 +3,10 @@ ETC_DIR=/etc/$PROJNAME
 ENV_FILE=$ETC_DIR/env
 PROG=/opt/$PROJNAME
 
-useradd -r -G opensgf opensgf
+group=opensgf
+user=opensgf
+grep -qw ^$group /etc/group || groupadd $group
+grep -qw ^$user /etc/passwd || useradd -r -g $group $user
 
 mkdir -p $ETC_DIR
 touch $ENV_FILE
