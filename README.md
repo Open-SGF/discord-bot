@@ -2,7 +2,7 @@
 This bot's primary purpose is to notify users on Discord about upcoming
 events.
 
-[Bot invite link](https://discord.com/api/oauth2/authorize?client_id=945072391950831656&permissions=8590085120&scope=bot)
+[Bot invite link](https://discord.com/api/oauth2/authorize?client_id=968292503604330557&permissions=8590085120&scope=bot)
 
 ## Contributing
 
