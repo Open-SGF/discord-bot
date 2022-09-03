@@ -3,7 +3,6 @@ package bot
 import (
 	"bufio"
 	"discord-bot/config"
-	"discord-bot/meetup"
 	"discord-bot/util"
 	"fmt"
 	"log"
@@ -23,7 +22,7 @@ var subscribedServers map[string]string
 func Run() {
 	subscribedServers = make(map[string]string)
 
-	session, err := discordgo.New("Bot " + config.DiscordBotToken)
+	session, err := discordgo.New("Bot " + config.Settings.DiscordBotToken)
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -46,7 +45,7 @@ func Run() {
 
 	// This Discord client doesn't have a way to attach event handlers to the
 	// heartbeat, therefore we need our own timer to post to all the servers.
-	ticker := time.NewTicker(time.Duration(config.TickRateInSeconds) * time.Second)
+	ticker := time.NewTicker(time.Duration(config.Settings.TickRateInSeconds) * time.Second)
 	quit := make(chan struct{})
 	go func() {
 		for {
@@ -68,10 +67,12 @@ func Run() {
 // In order to create/post events per discord server, we need to know which
 // server we're currently subscribed to.
 func onJoinGuild(session *discordgo.Session, event *discordgo.GuildCreate) {
+	// TODO: Need to get guild permissions (event.Permissions), and then assign those to our cache
+	// This is so that we can post what we think we can post and have reasonable fallbacks
+
 	// TODO: We need a way to know which channel to post to per discord server
-	// So we'll do that assignment here and then know on lookup of server
-	// on post to send the post
-	subscribedServers[event.ID] = "<channel id>"
+	// For now we'll use the event.SystemChannelID since that's considered the "announcements" channel
+	subscribedServers[event.ID] = event.SystemChannelID
 
 	postNextEvent(session, event.ID)
 }
@@ -86,9 +87,29 @@ func postNextEvent(session *discordgo.Session, guildID string) {
 		return
 	}
 
-	// TODO: Figure out some caching mechanism so we only fetch this once
-	// for all servers that need updating
-	meetupEvent := meetup.GetNextMeetupEvent()
+	if !config.Settings.EnableMeetupApi && !config.Settings.EnableCustomMeetupEventMessage {
+		return
+	}
+
+	nextEventMessage := ""
+	if config.Settings.EnableCustomMeetupEventMessage {
+		nextEventMessage = config.Settings.CustomMeetupEventMessage
+	}
+
+	if config.Settings.EnableMeetupApi {
+		// TODO: Figure out some caching mechanism so we only fetch this once
+		// for all servers that need updating
+		nextEventMessage = "" // TODO: Get this from meetup
+	}
+
+	if len(nextEventMessage) <= 0 {
+		return
+	}
+
+	// TODO: Check if the next event is not _this week_ (implies a holiday or skipped event), if not this week, then skip
+	// TODO: When config.Settings.EnableCustomMeetupEventMessage is set, check config if there's a holiday so we don't post anything
+
+	//meetupEvent := meetup.GetNextMeetupEvent()
 
 	// Use: session.GuildScheduledEvents()
 	// To grab current events in discord, and see if our next fetched event is
@@ -99,8 +120,8 @@ func postNextEvent(session *discordgo.Session, guildID string) {
 	// and boots back up in the middle of a cycle)
 
 	channelID := subscribedServers[guildID]
-	fmt.Printf("[%s] Posting next event to %s: %s\n", guildID, channelID, meetupEvent)
-	// session.ChannelMessageSend(channelID, "some message about the upcoming event")
+	fmt.Printf("[%s] Posting next event to %s: %s\n", guildID, channelID, nextEventMessage)
+	session.ChannelMessageSend(channelID, nextEventMessage)
 }
 
 func shouldGetNextMeetupEvent(guildID string) bool {

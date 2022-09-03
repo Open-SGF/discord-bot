@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	err := config.ReadConfig()
+	err := config.ReadConfig("./config.json")
 	if err != nil {
 		log.Fatal(err)
 		return
