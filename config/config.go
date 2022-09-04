@@ -18,11 +18,12 @@ type configStruct struct {
 	EnableCustomMeetupEventMessage bool   `json:"enableCustomMeetupEventMessage"`
 	CustomMeetupEventMessage       string `json:"customMeetupEventMessage,omitempty"`
 	Meetup                         struct {
-		GroupID           string `json:"groupId"`
-		UserID            string `json:"userId"`
-		JWTSigningString  string `json:"jwtSignedString"`
-		JWTPrivateKeyPath string `json:"jwtPrivateKeyPath"`
-		OAuthClientKey    string `json:"oauthClientKey"`
+		GroupID              string `json:"groupId"`
+		UserID               string `json:"userId"`
+		JWTSigningString     string `json:"jwtSignedString"`
+		JWTPrivateKeyPath    string `json:"jwtPrivateKeyPath"`
+		OAuthClientKey       string `json:"oauthClientKey"`
+		OAuthClientSecretKey string `json:"OAuthClientSecretKey"`
 	} `json:"meetup,omitempty"`
 }
 
