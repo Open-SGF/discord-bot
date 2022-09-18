@@ -20,6 +20,7 @@ var (
 	accessTokenURL = "https://secure.meetup.com/oauth2/access"
 	userAgent      = "curl/7.74.0"
 	nullTime       = time.Date(0, 0, 0, 0, 0, 0, 0, time.Local)
+	API_URL        = "https://api.meetup.com/gql"
 )
 
 type Token struct {
@@ -82,6 +83,7 @@ func (mc *Client) refreshToken() (string, error) {
 
 	t := &http2.Transport{}
 	client := &http.Client{
+		Timeout:   1 * time.Second,
 		Transport: t,
 	}
 	resp, err := client.Do(req)
@@ -93,7 +95,11 @@ func (mc *Client) refreshToken() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer resp.Body.Close()
+
+	err = resp.Body.Close()
+	if err != nil {
+		return "", err
+	}
 
 	if resp.StatusCode != 200 {
 		return "", errors.New(string(body))
@@ -193,6 +199,7 @@ func (mc *Client) getNewAuthorizationToken() (string, error) {
 
 	t := &http2.Transport{}
 	client := &http.Client{
+		Timeout:   1 * time.Second,
 		Transport: t,
 	}
 	resp, err := client.Do(req)
@@ -204,7 +211,11 @@ func (mc *Client) getNewAuthorizationToken() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer resp.Body.Close()
+
+	err = resp.Body.Close()
+	if err != nil {
+		return "", err
+	}
 
 	if resp.StatusCode != 200 {
 		return "", errors.New(string(body))
@@ -225,4 +236,65 @@ func (mc *Client) getNewAuthorizationToken() (string, error) {
 	mc.expiresIn = now.Add(time.Duration(tmpToken.ExpiresIn) * time.Second)
 	mc.refreshIn = mc.expiresIn.Add(-30 * time.Second)
 	return tmpToken.AccessToken, nil
+}
+
+// MakeRequest Returns JSON as []byte, callers are supposed to handle the unmarshalling
+func (mc *Client) MakeRequest(query string, variables map[string]interface{}) ([]byte, error) {
+
+	type Body struct {
+		Query     string                 `json:"query"`
+		Variables map[string]interface{} `json:"variables"`
+	}
+
+	reqBody := Body{
+		Query:     query,
+		Variables: variables,
+	}
+
+	reqBodyJson, err := json.Marshal(reqBody)
+	if err != nil {
+		return []byte(""), err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, API_URL, strings.NewReader(string(reqBodyJson)))
+	if err != nil {
+		return []byte(""), err
+	}
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Accept", "application/json")
+	req.Header.Add("User-Agent", userAgent)
+
+	t := &http2.Transport{}
+	reqClient := &http.Client{
+		Timeout:   5 * time.Second,
+		Transport: t,
+	}
+
+	token, err := mc.GetNextAuthToken()
+	if err != nil {
+		return []byte(""), err
+	}
+
+	req.Header.Add("Authorization", "Bearer "+token)
+	resp, err := reqClient.Do(req)
+	if err != nil {
+		return []byte(""), err
+	}
+
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return []byte(""), err
+	}
+
+	err = resp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		return []byte(""), errors.New(string(respBody))
+	}
+
+	return respBody, nil
 }

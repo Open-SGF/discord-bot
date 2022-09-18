@@ -3,6 +3,7 @@ package bot
 import (
 	"bufio"
 	"discord-bot/config"
+	"discord-bot/meetup"
 	"discord-bot/util"
 	"fmt"
 	"log"
@@ -92,24 +93,31 @@ func postNextEvent(session *discordgo.Session, guildID string) {
 	}
 
 	nextEventMessage := ""
-	if config.Settings.EnableCustomMeetupEventMessage {
-		nextEventMessage = config.Settings.CustomMeetupEventMessage
+	if config.Settings.EnableMeetupApi {
+		client := meetup.NewClient()
+		meetupEvent, err := meetup.GetNextMeetupEvent(client)
+		if err != nil {
+			log.Print(err)
+
+			// Go ahead and default to custom message if this fails
+			config.Settings.EnableCustomMeetupEventMessage = true
+		} else {
+			// If the upcoming event is not this week, then we know we should skip posting this event
+			if meetupEvent.SameWeek(util.TimeNow("America/Chicago")) {
+				nextEventMessage = constructMessage(meetupEvent)
+			}
+		}
 	}
 
-	if config.Settings.EnableMeetupApi {
-		// TODO: Figure out some caching mechanism so we only fetch this once
-		// for all servers that need updating
-		nextEventMessage = "" // TODO: Get this from meetup
+	// TODO: When config.Settings.EnableCustomMeetupEventMessage is set, check config if there's a holiday so we don't post anything
+
+	if config.Settings.EnableCustomMeetupEventMessage {
+		nextEventMessage = config.Settings.CustomMeetupEventMessage
 	}
 
 	if len(nextEventMessage) <= 0 {
 		return
 	}
-
-	// TODO: Check if the next event is not _this week_ (implies a holiday or skipped event), if not this week, then skip
-	// TODO: When config.Settings.EnableCustomMeetupEventMessage is set, check config if there's a holiday so we don't post anything
-
-	//meetupEvent := meetup.GetNextMeetupEvent()
 
 	// Use: session.GuildScheduledEvents()
 	// To grab current events in discord, and see if our next fetched event is
@@ -186,4 +194,8 @@ func shouldGetNextMeetupEvent(guildID string) bool {
 	}
 
 	return false
+}
+
+func constructMessage(event *meetup.Event) string {
+	return ""
 }
