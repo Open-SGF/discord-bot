@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+    build-amd64:
+      image: golang:1.19-alpine
+      command: ./ci/build.sh
+      volumes:
+        - ../:/work
+      env_file:
+        - .env
+      working_dir: /work
+      stdin_open: true
+      tty: true
+    pkg-debian:
+      build:
+        dockerfile: ci/fpm.Dockerfile
+        context: ..
+      volumes:
+        - ../out:/out
+      command: ./pkg-deb.sh
+      env_file:
+        - .env
+      stdin_open: true
+      tty: true

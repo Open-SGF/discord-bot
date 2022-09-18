@@ -2,4 +2,5 @@
 .*_next_update
 config.json
 build
+out
 *.deb

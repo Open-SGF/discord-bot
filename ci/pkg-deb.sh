@@ -1,14 +1,6 @@
-#!/bin/bash
+#!/bin/sh -e
 
-PROJNAME=opensgf-discord-bot
-ROOT_DIR=build
-BIN_DIR=$ROOT_DIR/opt/$PROJNAME/bin
-
-rm -rf $ROOT_DIR
-mkdir -p $BIN_DIR $SYSTEMD_DIR
-cp example.config.json $BIN_DIR/config.json
-
-CGO_ENABLED=0 go build -o $BIN_DIR/$PROJNAME main.go
+mkdir -p /out
 
 rm -f $PROJNAME*.deb
 fpm \
@@ -20,9 +12,11 @@ fpm \
     --deb-systemd-enable \
     --deb-systemd opensgf-discord-bot.service \
     --deb-systemd-restart-after-upgrade \
-    -C $ROOT_DIR \
+    -C $BUILD_DIR \
     --deb-user opensgf \
     --deb-group opensgf \
     --after-install postinstall \
     --before-install preinstall \
     .
+
+cp *.deb /out

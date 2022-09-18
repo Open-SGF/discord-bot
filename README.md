@@ -35,16 +35,20 @@ events.
 
 ### Initial server setup
 
-1. `docker-compose run debian`
-2. Copy `opensgf-discord-bot_*.deb` to the server
-4. `sudo dpkg -i /path/to/opensgf-discord-bot_*.deb`
-5. `sudo vi /etc/opensgf-discord-bot/env`
-6. Write `OPENSGF_DISCORD_BOT_TOKEN=<TOKEN>` (insecure, but only root has access)
-7. `sudo systemctl start opensgf-discord-bot.service`
+1. `cd ci`
+2. `docker-compose run build-amd64`
+3. `docker-compose run pkg-debian`
+4. Copy `./out/opensgf-discord-bot_*.deb` to the server
+5. `sudo dpkg -i /path/to/opensgf-discord-bot_*.deb`
+6. `sudo vi /etc/opensgf-discord-bot/env`
+7. Write `OPENSGF_DISCORD_BOT_TOKEN=<TOKEN>` (insecure, but only root has access)
+8. `sudo systemctl start opensgf-discord-bot.service`
 
 ### Performing updates
 
-1. `docker-compose run debian`
-2. Copy `opensgf-discord-bot_*.deb` to the server
-3. `sudo dpkg -i /path/to/opensgf-discord-bot_*.deb`
-4. `sudo systemctl restart opensgf-discord-bot.service`
+1. `cd ci`
+2. `docker-compose run build-amd64`
+3. `docker-compose run pkg-debian`
+4. Copy `./out/opensgf-discord-bot_*.deb` to the server
+5. `sudo dpkg -i /path/to/opensgf-discord-bot_*.deb`
+6. `sudo systemctl restart opensgf-discord-bot.service`
