@@ -44,5 +44,29 @@ func ReadConfig(configFile string) error {
 		Settings.DiscordBotToken = os.Getenv("OPENSGF_DISCORD_BOT_TOKEN")
 	}
 
+	if Settings.Meetup.GroupID[0] == '$' {
+		Settings.Meetup.GroupID = os.Getenv("OPENSGF_DISCORD_BOT_MEETUP_GROUP_ID")
+	}
+
+	if Settings.Meetup.UserID[0] == '$' {
+		Settings.Meetup.UserID = os.Getenv("OPENSGF_DISCORD_BOT_MEETUP_USER_ID")
+	}
+
+	if Settings.Meetup.JWTSigningString[0] == '$' {
+		Settings.Meetup.JWTSigningString = os.Getenv("OPENSGF_DISCORD_BOT_MEETUP_JWT_PUBLIC_KEY")
+	}
+
+	if Settings.Meetup.JWTPrivateKeyPath[0] == '$' {
+		Settings.Meetup.JWTPrivateKeyPath = os.Getenv("OPENSGF_DISCORD_BOT_MEETUP_JWT_PRIVATE_KEY_PATH")
+	}
+
+	if Settings.Meetup.OAuthClientKey[0] == '$' {
+		Settings.Meetup.OAuthClientKey = os.Getenv("OPENSGF_DISCORD_BOT_MEETUP_OAUTH_CUSTOMER_KEY")
+	}
+
+	if Settings.Meetup.OAuthClientSecretKey[0] == '$' {
+		Settings.Meetup.OAuthClientSecretKey = os.Getenv("OPENSGF_DISCORD_BOT_MEETUP_OAUTH_CLIENT_SECRET_KEY")
+	}
+
 	return nil
 }
