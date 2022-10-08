@@ -4,7 +4,6 @@ import (
 	"discord-bot/config"
 	"discord-bot/meetup"
 	"discord-bot/util"
-	"fmt"
 	"log"
 	"time"
 
@@ -74,6 +73,25 @@ func onJoinGuild(session *discordgo.Session, event *discordgo.GuildCreate) {
 // the guild from the subscribedGuilds list. There doesn't seem to be a GuildRemove event
 // on first glance. Will need to setup a second Discord server to test the multi-server setup.
 
+func postEmbeddedMessage(session *discordgo.Session, server *Server, event *MeetupEvent) {
+	embed, err := session.ChannelMessageSendEmbed(server.PostChannelID, event.toEmbeddedMessage())
+	if err != nil {
+		log.Print(err)
+		return
+	}
+	log.Printf("[%s] Posting next event to %s: %s\n", server.ID, server.PostChannelID, embed.Content)
+}
+
+func postCustomEventMessage(session *discordgo.Session, server *Server) {
+	nextEventMessage := config.Settings.CustomMeetupEventMessage
+	send, err := session.ChannelMessageSend(server.PostChannelID, nextEventMessage)
+	if err != nil {
+		log.Print(err)
+		return
+	}
+	log.Printf("[%s] Posting next event to %s: %s\n", server.ID, server.PostChannelID, send.Content)
+}
+
 func postNextEvent(session *discordgo.Session, server *Server) {
 	now := util.TimeNow("America/Chicago")
 
@@ -82,22 +100,19 @@ func postNextEvent(session *discordgo.Session, server *Server) {
 	}
 
 	if !config.Settings.EnableMeetupApi && !config.Settings.EnableCustomMeetupEventMessage {
+		log.Println("Config does not allow sending of any messages!")
 		return
 	}
 
-	nextEventMessage := ""
 	if config.Settings.EnableMeetupApi {
 		client := meetup.NewClient()
 		meetupEvent, err := meetup.GetNextMeetupEvent(client)
 		if err != nil {
 			log.Print(err)
-
-			// Go ahead and default to custom message if this fails
-			config.Settings.EnableCustomMeetupEventMessage = true
 		} else {
 			// If the upcoming event is not this week, then we know we should skip posting this event
-			if meetupEvent.SameWeek(util.TimeNow("America/Chicago")) {
-				nextEventMessage = constructMessage(meetupEvent)
+			if meetupEvent.SameWeek(now) {
+				postEmbeddedMessage(session, server, &MeetupEvent{meetupEvent})
 			}
 		}
 	}
@@ -105,11 +120,7 @@ func postNextEvent(session *discordgo.Session, server *Server) {
 	// TODO: When config.Settings.EnableCustomMeetupEventMessage is set, check config if there's a holiday so we don't post anything
 
 	if config.Settings.EnableCustomMeetupEventMessage {
-		nextEventMessage = config.Settings.CustomMeetupEventMessage
-	}
-
-	if len(nextEventMessage) <= 0 {
-		return
+		postCustomEventMessage(session, server)
 	}
 
 	// Use: session.GuildScheduledEvents()
@@ -119,11 +130,4 @@ func postNextEvent(session *discordgo.Session, server *Server) {
 	// If yes, don't post to channel -- this is our final check to not blast
 	// servers upon joining them (helps for the case when the bot goes down in
 	// and boots back up in the middle of a cycle)
-
-	fmt.Printf("[%s] Posting next event to %s: %s\n", server.ID, server.PostChannelID, nextEventMessage)
-	session.ChannelMessageSend(server.PostChannelID, nextEventMessage)
-}
-
-func constructMessage(event *meetup.Event) string {
-	return ""
 }

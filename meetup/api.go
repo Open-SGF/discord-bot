@@ -9,10 +9,14 @@ import (
 )
 
 type Event struct {
-	DateTime string `json:"dateTime"`
-	Timezone string `json:"timezone"`
-	ShortUrl string `json:"shortUrl"`
-	ImageUrl string `json:"imageUrl"`
+	Title            string `json:"title"`
+	DateTime         string `json:"dateTime"`
+	Timezone         string `json:"timezone"`
+	ShortUrl         string `json:"shortUrl"`
+	ImageUrl         string `json:"imageUrl"`
+	ShortDescription string `json:"shortDescription"`
+	Description      string `json:"description"`
+	GroupName        string
 }
 
 func (e *Event) SameWeek(inTime time.Time) bool {
@@ -56,10 +60,13 @@ func GetNextMeetupEvent(client *Client) (*Event, error) {
 				upcomingEvents (input: {first: 1}) {
 					edges {
 						node {
+							title,
 							dateTime,
 							timezone,
 							shortUrl,
-							imageUrl
+							imageUrl,
+							shortDescription,
+							description
 						}
 					}
 				}
@@ -90,6 +97,8 @@ func GetNextMeetupEvent(client *Client) (*Event, error) {
 	if len(out.Data.Group.UpcomingEvents.Edges) == 0 || out.Data.Group.UpcomingEvents.Edges[0].Node == nil {
 		return nil, errors.New(string("no events"))
 	}
+
+	out.Data.Group.UpcomingEvents.Edges[0].Node.GroupName = out.Data.Group.Name
 
 	return out.Data.Group.UpcomingEvents.Edges[0].Node, nil
 }
