@@ -6,7 +6,7 @@ rm -f $PROJNAME*.deb
 fpm \
     -s dir \
     -t deb \
-    -v 0.1.0 \
+    -v $VERSION \
     -n $PROJNAME \
     --description "Open SGF Discord bot" \
     --deb-systemd-enable \
