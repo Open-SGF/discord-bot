@@ -20,7 +20,7 @@ type Event struct {
 }
 
 func (e *Event) SameWeek(inTime time.Time) bool {
-	eventTime, err := time.Parse("2006-01-02T15:04-0700", e.DateTime)
+	eventTime, err := time.Parse("2006-01-02T15:04-07:00", e.DateTime)
 	if err != nil {
 		return false
 	}
