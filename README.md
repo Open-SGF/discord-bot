@@ -22,7 +22,7 @@ events.
 
 5. Run the bot with `go run main.go`
 
-### API Documenation
+### API Documentation
 - [Discord's API](https://discord.com/developers/docs/intro)
 - [Meetup's API](https://www.meetup.com/api/general/)
 - [Discordgo](https://github.com/bwmarrin/discordgo) (Golang Discord library used)
