@@ -6,6 +6,7 @@ echo "Releasing to $V"
 
 sed -i "s/VERSION=.*$/VERSION=$V/" .env
 
+mkdir -p ../build
 git add .env
 git commit -m "Release v$V"
 git tag -a v$V -m "Release v$V"
