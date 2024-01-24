@@ -65,7 +65,7 @@ func onJoinGuild(session *discordgo.Session, event *discordgo.GuildCreate) {
 // on first glance. Will need to setup a second Discord server to test the multi-server setup.
 
 func postEmbeddedMessage(session *discordgo.Session, server *Server, event *MeetupEvent) {
-	embed, err := session.ChannelMessageSendEmbed(server.PostChannelID, event.toEmbeddedMessage())
+	embed, err := session.ChannelMessageSendComplex(server.PostChannelID, event.toEmbeddedMessage())
 	if err != nil {
 		log.Print(err)
 		return
