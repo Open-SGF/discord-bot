@@ -4,11 +4,12 @@ import (
 	"bufio"
 	"discord-bot/util"
 	"fmt"
-	"github.com/bwmarrin/discordgo"
 	"log"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 type Server struct {

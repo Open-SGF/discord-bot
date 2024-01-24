@@ -5,8 +5,6 @@ import (
 	"discord-bot/util"
 	"encoding/json"
 	"errors"
-	"github.com/golang-jwt/jwt/v4"
-	"golang.org/x/net/http2"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -14,6 +12,9 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/golang-jwt/jwt/v4"
+	"golang.org/x/net/http2"
 )
 
 var (
@@ -59,8 +60,6 @@ func (mc *Client) shouldRefreshToken(offset time.Time) bool {
 }
 
 func (mc *Client) refreshToken() (string, error) {
-	now := util.TimeNow("America/Chicago")
-
 	var refreshToken string
 	mc.lock.Lock()
 	refreshToken = mc.token.RefreshToken
@@ -112,7 +111,7 @@ func (mc *Client) refreshToken() (string, error) {
 	}
 
 	// Reset for more accurate expiration times
-	now = util.TimeNow("America/Chicago")
+	now := util.TimeNow("America/Chicago")
 
 	mc.lock.Lock()
 	defer mc.lock.Unlock()

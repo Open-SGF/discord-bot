@@ -10,8 +10,6 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-var botID string
-
 // TODO: Turn this into a concurrent set to handle safe
 // discord server removals
 var subscribedServers map[string]*Server
@@ -25,13 +23,6 @@ func Run() {
 		return
 	}
 
-	user, err := session.User("@me")
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-
-	botID = user.ID
 	session.AddHandler(onJoinGuild)
 
 	err = session.Open()

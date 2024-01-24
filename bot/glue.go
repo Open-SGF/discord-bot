@@ -3,6 +3,7 @@ package bot
 import (
 	"discord-bot/meetup"
 	"fmt"
+
 	"github.com/bwmarrin/discordgo"
 )
 
