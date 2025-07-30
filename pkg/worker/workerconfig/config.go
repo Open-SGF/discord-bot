@@ -25,7 +25,7 @@ var configKeys = []string{
 
 type Config struct {
 	appconfig.Common         `mapstructure:",squash"`
-	SGFMeetupAPIURL          string `mapstructure:"sgf_meetup_apiurl"`
+	SGFMeetupAPIURL          string `mapstructure:"sgf_meetup_api_url"`
 	SGFMeetupAPIClientID     string `mapstructure:"sgf_meetup_api_client_id"`
 	SGFMeetupAPIClientSecret string `mapstructure:"sgf_meetup_api_client_secret"`
 	DiscordWebhookURL        string `mapstructure:"discord_webhook_url"`
