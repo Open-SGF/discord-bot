@@ -53,7 +53,7 @@ var ConfigProviders = wire.NewSet(
 	wire.Bind(new(AwsConfigManager), new(*AwsConfigManagerImpl)),
 	NewAwsConfigManager,
 	AwsConfigProvider,
-	wire.FieldsOf(new(Common), "Logging", "Aws", "DynamoDB"),
+	wire.FieldsOf(new(Common), "Logging", "Aws"),
 )
 
 func NewCommonConfig(ctx context.Context) (*Common, error) {
