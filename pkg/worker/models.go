@@ -1,12 +1,14 @@
 package worker
 
+import "time"
+
 type MeetupEvent struct {
 	ID          string        `json:"id"`
 	Group       MeetupGroup   `json:"group"`
 	Title       string        `json:"title"`
 	EventURL    string        `json:"eventUrl"`
 	Description string        `json:"description"`
-	DateTime    *string       `json:"dateTime"`
+	DateTime    *time.Time    `json:"dateTime"`
 	Duration    string        `json:"duration"`
 	Venue       *MeetupVenue  `json:"venue"`
 	Host        *MeetupHost   `json:"host"`
