@@ -8,6 +8,7 @@ import (
 	"errors"
 	"log/slog"
 	"net/http"
+	"time"
 )
 
 type DiscordNotifierService struct {
@@ -25,17 +26,25 @@ func NewDiscordNotifierService(config *workerconfig.Config, httpClient *http.Cli
 }
 
 func (s *DiscordNotifierService) Notify(ctx context.Context, event *MeetupEvent) error {
+	loc, err := time.LoadLocation("America/Chicago")
+	if err != nil {
+		s.logger.Error("failed to load CST timezone", slog.Any("error", err))
+		return ErrDiscordNotify
+	}
+
+	eventTime := event.DateTime.In(loc)
+
 	discordReq := DiscordRequest{
 		Embeds: []DiscordEmbed{
 			{
 				Title:       event.Title,
 				Description: event.Description,
 				URL:         event.EventURL,
+				Timestamp:   eventTime.Format(time.RFC3339),
 				Color:       5814783,
 				Fields: []DiscordEmbedField{
-					{Name: "Group", Value: event.Group.Name, Inline: true},
-					{Name: "Host", Value: event.Host.Name, Inline: true},
-					{Name: "Duration", Value: event.Duration, Inline: true},
+					{Name: "Date", Value: eventTime.Format("Januay 2 2006"), Inline: true},
+					{Name: "Time", Value: eventTime.Format("3:04PM"), Inline: true},
 				},
 			},
 		},
