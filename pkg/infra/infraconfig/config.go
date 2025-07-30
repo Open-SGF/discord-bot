@@ -6,13 +6,11 @@ import (
 )
 
 const (
-	appEnvKey        = "APP_ENV"
-	appDomainNameEnv = "APP_DOMAIN_NAME"
+	appEnvKey = "APP_ENV"
 )
 
 var configKeys = []string{
 	appEnvKey,
-	appDomainNameEnv,
 }
 
 type Config struct {

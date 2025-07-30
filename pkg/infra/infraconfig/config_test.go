@@ -16,13 +16,11 @@ func TestNewConfig(t *testing.T) {
 	t.Run("successful load from environment variables", func(t *testing.T) {
 		switchToTempTestDir(t)
 		t.Setenv(appEnvKey, "staging")
-		t.Setenv(appDomainNameEnv, "staging-meetup-api.opensgf.org")
 
 		cfg, err := NewConfig(ctx)
 		require.NoError(t, err)
 
 		assert.Equal(t, "staging", cfg.AppEnv)
-		assert.Equal(t, "staging-meetup-api.opensgf.org", cfg.AppDomainName)
 	})
 
 	t.Run("successful load from .env file", func(t *testing.T) {
@@ -31,7 +29,6 @@ func TestNewConfig(t *testing.T) {
 
 		envContent := strings.Join([]string{
 			appEnvKey + "=staging",
-			appDomainNameEnv + "=staging-meetup-api.opensgf.org",
 		}, "\n")
 
 		require.NoError(t, os.WriteFile(envPath, []byte(envContent), 0600))
@@ -45,7 +42,6 @@ func TestNewConfig(t *testing.T) {
 		require.NoError(t, err)
 
 		assert.Equal(t, "staging", cfg.AppEnv)
-		assert.Equal(t, "staging-meetup-api.opensgf.org", cfg.AppDomainName)
 	})
 }
 

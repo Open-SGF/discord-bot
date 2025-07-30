@@ -46,7 +46,7 @@ func (s *MeetupEventService) GetNextEvent(ctx context.Context) (*MeetupEvent, er
 
 	if err != nil {
 		s.logger.Error("failed to create http request", slog.Any("error", err))
-		return nil, MeetupEventFetchFailed
+		return nil, ErrMeetupEventFetch
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -57,21 +57,21 @@ func (s *MeetupEventService) GetNextEvent(ctx context.Context) (*MeetupEvent, er
 
 	if err != nil {
 		s.logger.Error("failed to execute http request", slog.Any("error", err))
-		return nil, MeetupEventFetchFailed
+		return nil, ErrMeetupEventFetch
 	}
 
 	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		s.logger.Error("unexpected http status code when fetching event", slog.Int("statusCode", resp.StatusCode))
-		return nil, MeetupEventFetchFailed
+		return nil, ErrMeetupEventFetch
 	}
 
 	var event MeetupEvent
 	err = json.NewDecoder(resp.Body).Decode(&event)
 	if err != nil {
 		s.logger.Error("failed to parse meetup event", slog.Any("error", err))
-		return nil, MeetupEventFetchFailed
+		return nil, ErrMeetupEventFetch
 	}
 
 	return &event, nil
@@ -96,7 +96,7 @@ func (s *MeetupEventService) getAuthToken(ctx context.Context) (string, error) {
 
 	if err != nil {
 		s.logger.Error("failed to marshal json", slog.Any("error", err))
-		return "", MeetupAuthFailed
+		return "", ErrMeetupAuth
 	}
 
 	req, err := http.NewRequestWithContext(
@@ -108,7 +108,7 @@ func (s *MeetupEventService) getAuthToken(ctx context.Context) (string, error) {
 
 	if err != nil {
 		s.logger.Error("failed to create http request", slog.Any("error", err))
-		return "", MeetupAuthFailed
+		return "", ErrMeetupAuth
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -118,25 +118,25 @@ func (s *MeetupEventService) getAuthToken(ctx context.Context) (string, error) {
 
 	if err != nil {
 		s.logger.Error("failed to execute http request", slog.Any("error", err))
-		return "", MeetupAuthFailed
+		return "", ErrMeetupAuth
 	}
 
 	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		s.logger.Error("unexpected http status code when fetching auth token", slog.Int("statusCode", resp.StatusCode))
-		return "", MeetupAuthFailed
+		return "", ErrMeetupAuth
 	}
 
 	var authResponse meetupAuthResponse
 	err = json.NewDecoder(resp.Body).Decode(&authResponse)
 	if err != nil {
 		s.logger.Error("failed to parse auth response", slog.Any("error", err))
-		return "", MeetupAuthFailed
+		return "", ErrMeetupAuth
 	}
 
 	return authResponse.AccessToken, nil
 }
 
-var MeetupAuthFailed = errors.New("meetup auth failed")
-var MeetupEventFetchFailed = errors.New("failed to get meetup event")
+var ErrMeetupAuth = errors.New("meetup auth failed")
+var ErrMeetupEventFetch = errors.New("failed to get meetup event")
