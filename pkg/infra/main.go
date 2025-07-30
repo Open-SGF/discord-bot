@@ -47,7 +47,7 @@ func NewStack(scope constructs.Construct, id string, props *AppStackProps) awscd
 	}))
 
 	workerScheduleRule := awsevents.NewRule(stack, jsii.String("WorkerEventBridgeRule"), &awsevents.RuleProps{
-		Schedule: awsevents.Schedule_Expression(jsii.String("cron(0 15 * * *)")), // every 2 hours
+		Schedule: awsevents.Schedule_Expression(jsii.String("cron(0 15 * * ? *)")), // every 2 hours
 	})
 
 	workerScheduleRule.AddTarget(awseventstargets.NewLambdaFunction(
