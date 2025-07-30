@@ -9,6 +9,7 @@ package worker
 import (
 	"context"
 	"discord-bot/pkg/shared/appconfig"
+	"discord-bot/pkg/shared/clock"
 	"discord-bot/pkg/shared/httpclient"
 	"discord-bot/pkg/shared/logging"
 	"discord-bot/pkg/worker/workerconfig"
@@ -23,10 +24,17 @@ func InitService(ctx context.Context) (*Service, error) {
 	if err != nil {
 		return nil, err
 	}
-	service := NewService(config)
+	realTimeSource := clock.NewRealTimeSource()
+	common := config.Common
+	loggingConfig := common.Logging
+	logger := logging.DefaultLogger(ctx, loggingConfig)
+	client := httpclient.DefaultClient(realTimeSource, logger)
+	meetupEventService := NewMeetupEventService(config, client)
+	discordNotifierService := NewDiscordNotifierService(config, client)
+	service := NewService(meetupEventService, discordNotifierService)
 	return service, nil
 }
 
 // wire.go:
 
-var CommonProviders = wire.NewSet(workerconfig.ConfigProviders, logging.DefaultLogger, httpclient.DefaultClient)
+var CommonProviders = wire.NewSet(workerconfig.ConfigProviders, clock.RealClockProvider, logging.DefaultLogger, httpclient.DefaultClient)
