@@ -1,0 +1,25 @@
+{
+  "name": "discord-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cdk": "cdk",
+    "synth": "rimraf ./cdk.out && cdk synth",
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Open-SGF/discord-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Open-SGF/discord-bot/issues"
+  },
+  "homepage": "https://github.com/Open-SGF/discord-bot#readme",
+  "description": "",
+  "devDependencies": {
+    "aws-cdk": "^2.1023.0",
+    "rimraf": "^6.0.1"
+  }
+}
