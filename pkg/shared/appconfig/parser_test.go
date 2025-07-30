@@ -157,10 +157,6 @@ func TestParser_WithCommonConfig(t *testing.T) {
 	assert.Equal(t, "test_aws_region", cfg.Aws.AwsRegion)
 	assert.Equal(t, "test_aws_access_key", cfg.Aws.AwsAccessKey)
 	assert.Equal(t, "test_aws_secret_access_key", cfg.Aws.AwsSecretAccessKey)
-	assert.Equal(t, "test_dynamodb_endpoint", cfg.DynamoDB.Endpoint)
-	assert.Equal(t, "test_dynamodb_aws_region", cfg.DynamoDB.Region)
-	assert.Equal(t, "test_dynamodb_aws_access_key", cfg.DynamoDB.AccessKey)
-	assert.Equal(t, "test_dynamodb_aws_secret_access_key", cfg.DynamoDB.SecretAccessKey)
 	assert.Equal(t, "test_other_key", cfg.OtherKey)
 }
 

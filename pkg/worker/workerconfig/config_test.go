@@ -17,20 +17,17 @@ func TestNewConfig(t *testing.T) {
 
 	t.Run("successful load from environment variables", func(t *testing.T) {
 		switchToTempTestDir(t)
-		t.Setenv(proxyFunctionNameKey, "test-proxy")
-		t.Setenv(eventsTableNameKey, "test-events")
-		t.Setenv(archivedEventsTableNameKey, "test-archived")
-		t.Setenv(groupIDDateTimeIndexNameKey, "test-index")
-		t.Setenv(meetupGroupNamesKey, "group1,group2")
-
+		t.Setenv(sgfMeetupAPIURL, "test-meetup-url")
+		t.Setenv(sgfMeetupAPIClientID, "test-client-id")
+		t.Setenv(sgfMeetupAPIClientSecret, "test-client-secret")
+		t.Setenv(discordWebhookURL, "test-discord-web")
 		cfg, err := NewConfig(ctx, awsConfigManager)
 		require.NoError(t, err)
 
-		assert.Equal(t, "test-proxy", cfg.ProxyFunctionName)
-		assert.Equal(t, "test-events", cfg.EventsTableName)
-		assert.Equal(t, "test-archived", cfg.ArchivedEventsTableName)
-		assert.Equal(t, "test-index", cfg.GroupIDDateTimeIndexName)
-		assert.Equal(t, []string{"group1", "group2"}, cfg.MeetupGroupNames)
+		assert.Equal(t, "test-meetup-url", cfg.SGFMeetupAPIURL)
+		assert.Equal(t, "test-client-id", cfg.SGFMeetupAPIClientID)
+		assert.Equal(t, "test-client-secret", cfg.SGFMeetupAPIClientSecret)
+		assert.Equal(t, "test-discord-web", cfg.DiscordWebhookURL)
 	})
 
 	t.Run("successful load from .env file", func(t *testing.T) {
@@ -38,11 +35,10 @@ func TestNewConfig(t *testing.T) {
 		envPath := filepath.Join(tempDir, ".env")
 
 		envContent := strings.Join([]string{
-			proxyFunctionNameKey + "=file-proxy",
-			eventsTableNameKey + "=file-events",
-			archivedEventsTableNameKey + "=file-archived",
-			groupIDDateTimeIndexNameKey + "=file-index",
-			meetupGroupNamesKey + "=group3,group4",
+			sgfMeetupAPIURL + "=test-meetup-url",
+			sgfMeetupAPIClientID + "=test-client-id",
+			sgfMeetupAPIClientSecret + "=test-client-secret",
+			discordWebhookURL + "=test-discord-web",
 		}, "\n")
 
 		require.NoError(t, os.WriteFile(envPath, []byte(envContent), 0600))
@@ -55,24 +51,10 @@ func TestNewConfig(t *testing.T) {
 		cfg, err := NewConfig(ctx, awsConfigManager)
 		require.NoError(t, err)
 
-		assert.Equal(t, "file-proxy", cfg.ProxyFunctionName)
-		assert.Equal(t, "file-events", cfg.EventsTableName)
-		assert.Equal(t, "file-archived", cfg.ArchivedEventsTableName)
-		assert.Equal(t, "file-index", cfg.GroupIDDateTimeIndexName)
-		assert.Equal(t, []string{"group3", "group4"}, cfg.MeetupGroupNames)
-	})
-
-	t.Run("sets default values for MeetupGroupNames", func(t *testing.T) {
-		switchToTempTestDir(t)
-		t.Setenv(proxyFunctionNameKey, "test-proxy")
-		t.Setenv(eventsTableNameKey, "test-events")
-		t.Setenv(archivedEventsTableNameKey, "test-archived")
-		t.Setenv(groupIDDateTimeIndexNameKey, "test-index")
-
-		cfg, err := NewConfig(ctx, awsConfigManager)
-		require.NoError(t, err)
-
-		assert.Empty(t, cfg.MeetupGroupNames)
+		assert.Equal(t, "test-meetup-url", cfg.SGFMeetupAPIURL)
+		assert.Equal(t, "test-client-id", cfg.SGFMeetupAPIClientID)
+		assert.Equal(t, "test-client-secret", cfg.SGFMeetupAPIClientSecret)
+		assert.Equal(t, "test-discord-web", cfg.DiscordWebhookURL)
 	})
 
 	t.Run("validation fails with missing fields", func(t *testing.T) {
@@ -80,10 +62,9 @@ func TestNewConfig(t *testing.T) {
 
 		_, err := NewConfig(ctx, awsConfigManager)
 		require.Error(t, err)
-		assert.Contains(t, err.Error(), proxyFunctionNameKey)
-		assert.Contains(t, err.Error(), eventsTableNameKey)
-		assert.Contains(t, err.Error(), archivedEventsTableNameKey)
-		assert.Contains(t, err.Error(), groupIDDateTimeIndexNameKey)
+		assert.Contains(t, err.Error(), sgfMeetupAPIClientID)
+		assert.Contains(t, err.Error(), sgfMeetupAPIClientSecret)
+		assert.Contains(t, err.Error(), discordWebhookURL)
 	})
 }
 

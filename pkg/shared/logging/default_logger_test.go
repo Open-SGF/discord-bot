@@ -3,6 +3,7 @@ package logging
 import (
 	"context"
 	"errors"
+	"github.com/getsentry/sentry-go"
 	"github.com/stretchr/testify/assert"
 	"log/slog"
 	"testing"

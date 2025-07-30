@@ -19,5 +19,5 @@ func NewDiscordNotifierService(config *workerconfig.Config, client *http.Client)
 }
 
 func (s *DiscordNotifierService) Notify(ctx context.Context, event *MeetupEvent) error {
-
+	return nil
 }

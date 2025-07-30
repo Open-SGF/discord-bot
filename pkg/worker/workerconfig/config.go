@@ -44,6 +44,7 @@ func NewConfig(ctx context.Context, awsConfigFactory appconfig.AwsConfigManager)
 			opts.AwsConfig = awsConfigFactory.Config()
 			opts.SSMPath = v.GetString(appconfig.SSMPathKey)
 		}).
+		WithCustomProcessor(setDefaults).
 		Parse(ctx, &config)
 
 	if err != nil {
@@ -55,6 +56,11 @@ func NewConfig(ctx context.Context, awsConfigFactory appconfig.AwsConfigManager)
 	}
 
 	return &config, nil
+}
+
+func setDefaults(_ context.Context, v *viper.Viper) error {
+	v.SetDefault(strings.ToLower(sgfMeetupAPIURL), "https://sgf-meetup-api.opensgf.org")
+	return nil
 }
 
 func (config *Config) validate() error {
