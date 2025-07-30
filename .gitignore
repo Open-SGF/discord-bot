@@ -1,6 +1,2 @@
+node_modules
 .idea
-.*_next_update
-config.json
-build
-out
-*.deb
