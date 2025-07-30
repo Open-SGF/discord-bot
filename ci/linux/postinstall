@@ -1,4 +1,0 @@
-PROJNAME=opensgf-discord-bot
-PROG=/opt/$PROJNAME
-
-chown -R opensgf:opensgf $PROG
