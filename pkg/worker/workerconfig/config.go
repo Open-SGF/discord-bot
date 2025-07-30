@@ -10,28 +10,25 @@ import (
 )
 
 const (
-	meetupGroupNamesKey         = "MEETUP_GROUP_NAMES"
-	proxyFunctionNameKey        = "MEETUP_PROXY_FUNCTION_NAME"
-	archivedEventsTableNameKey  = "ARCHIVED_EVENTS_TABLE_NAME"
-	eventsTableNameKey          = "EVENTS_TABLE_NAME"
-	groupIDDateTimeIndexNameKey = "GROUP_ID_DATE_TIME_INDEX_NAME"
+	sgfMeetupAPIURL          = "SGF_MEETUP_API_URL"
+	sgfMeetupAPIClientID     = "SGF_MEETUP_API_CLIENT_ID"
+	sgfMeetupAPIClientSecret = "SGF_MEETUP_API_CLIENT_SECRET"
+	discordWebhookURL        = "DISCORD_WEBHOOK_URL"
 )
 
 var configKeys = []string{
-	meetupGroupNamesKey,
-	proxyFunctionNameKey,
-	archivedEventsTableNameKey,
-	eventsTableNameKey,
-	groupIDDateTimeIndexNameKey,
+	sgfMeetupAPIURL,
+	sgfMeetupAPIClientID,
+	sgfMeetupAPIClientSecret,
+	discordWebhookURL,
 }
 
 type Config struct {
 	appconfig.Common         `mapstructure:",squash"`
-	MeetupGroupNames         []string `mapstructure:"meetup_group_names"`
-	ProxyFunctionName        string   `mapstructure:"meetup_proxy_function_name"`
-	ArchivedEventsTableName  string   `mapstructure:"archived_events_table_name"`
-	EventsTableName          string   `mapstructure:"events_table_name"`
-	GroupIDDateTimeIndexName string   `mapstructure:"group_id_date_time_index_name"`
+	SGFMeetupAPIURL          string `mapstructure:"sgf_meetup_apiurl"`
+	SGFMeetupAPIClientID     string `mapstructure:"sgf_meetup_api_client_id"`
+	SGFMeetupAPIClientSecret string `mapstructure:"sgf_meetup_api_client_secret"`
+	DiscordWebhookURL        string `mapstructure:"discord_webhook_url"`
 }
 
 func NewConfig(ctx context.Context, awsConfigFactory appconfig.AwsConfigManager) (*Config, error) {
@@ -47,7 +44,6 @@ func NewConfig(ctx context.Context, awsConfigFactory appconfig.AwsConfigManager)
 			opts.AwsConfig = awsConfigFactory.Config()
 			opts.SSMPath = v.GetString(appconfig.SSMPathKey)
 		}).
-		WithCustomProcessor(setDefaults).
 		Parse(ctx, &config)
 
 	if err != nil {
@@ -61,25 +57,20 @@ func NewConfig(ctx context.Context, awsConfigFactory appconfig.AwsConfigManager)
 	return &config, nil
 }
 
-func setDefaults(_ context.Context, v *viper.Viper) error {
-	v.SetDefault(strings.ToLower(meetupGroupNamesKey), []string{})
-	return nil
-}
-
 func (config *Config) validate() error {
 	var missing []string
 
-	if config.ProxyFunctionName == "" {
-		missing = append(missing, proxyFunctionNameKey)
+	if config.SGFMeetupAPIURL == "" {
+		missing = append(missing, sgfMeetupAPIURL)
 	}
-	if config.EventsTableName == "" {
-		missing = append(missing, eventsTableNameKey)
+	if config.SGFMeetupAPIClientID == "" {
+		missing = append(missing, sgfMeetupAPIClientID)
 	}
-	if config.ArchivedEventsTableName == "" {
-		missing = append(missing, archivedEventsTableNameKey)
+	if config.SGFMeetupAPIClientSecret == "" {
+		missing = append(missing, sgfMeetupAPIClientSecret)
 	}
-	if config.GroupIDDateTimeIndexName == "" {
-		missing = append(missing, groupIDDateTimeIndexNameKey)
+	if config.DiscordWebhookURL == "" {
+		missing = append(missing, discordWebhookURL)
 	}
 
 	if len(missing) > 0 {
