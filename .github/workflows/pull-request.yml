@@ -1,0 +1,9 @@
+name: PR Checks
+
+on:
+  pull_request:
+
+jobs:
+  lint-test:
+    if: ${{ github.head_ref != 'main' && github.head_ref != 'develop' }}
+    uses: ./.github/workflows/lint-test.yml

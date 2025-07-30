@@ -1,0 +1,38 @@
+name: Upsert API User
+
+on:
+  workflow_dispatch:
+    inputs:
+      client_id:
+        description: 'Client ID'
+        required: true
+      environment:
+        description: 'Deployment environment'
+        required: true
+        type: choice
+        options:
+          - Staging
+          - Production
+
+jobs:
+  upsert-user:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: go run ./cmd/upsertuser
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          CLIENT_ID: ${{ inputs.client_id }}
+          CLIENT_SECRET: ${{ secrets.UPSERT_USER_CLIENT_SECRET }}
+          APP_ENV: ${{ inputs.environment }}
+        run: |
+          go run ./cmd/upsertuser -clientId $CLIENT_ID -clientSecret $CLIENT_SECRET

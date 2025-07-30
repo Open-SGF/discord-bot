@@ -1,0 +1,31 @@
+name: Lint and Test
+on:
+  workflow_call:
+    secrets:
+      CODECOV_TOKEN:
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+      - run: go mod download
+      - name: Check generated files
+        run: |
+          go generate ./...
+          git diff --exit-code || (echo "Error: Generated files are out of date. Run 'go generate ./...' and commit changes." && exit 1)
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v7
+        with:
+          version: v2.1.2
+          args: cmd/... pkg/...
+      - name: go test
+        run: go test -coverprofile=coverage.out -p=1 ./cmd/... ./pkg/...
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: coverage.out
+          token: ${{ secrets.CODECOV_TOKEN }}
