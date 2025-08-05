@@ -44,8 +44,11 @@ func (s *Service) Execute(ctx context.Context) error {
 
 	timeUntil := nextEvent.DateTime.Sub(s.timeSource.Now())
 
-	if timeUntil < 1*time.Hour || timeUntil > 36*time.Hour {
-		s.logger.Info("The upcoming event isn't within 1-36 hours from now, skipping notification")
+	if timeUntil < 1*time.Hour && timeUntil > 36*time.Hour {
+		s.logger.Info("The upcoming event isn't within 1-36 hours from now, skipping notification",
+			slog.Any("nextEvent.DateTime", nextEvent.DateTime),
+			slog.Any("timeUntil", timeUntil),
+		)
 		return nil
 	}
 
