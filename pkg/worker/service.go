@@ -42,17 +42,13 @@ func (s *Service) Execute(ctx context.Context) error {
 		return fmt.Errorf("event DateTime is null")
 	}
 
-	//eventTime, err := time.Parse(time.RFC3339, *nextEvent.DateTime)
-	//
-	//if err != nil {
-	//	s.logger.Error("failed to parse event date time", slog.Any("error", err))
-	//	return err
-	//}
-
 	timeUntil := nextEvent.DateTime.Sub(s.timeSource.Now())
 
-	if timeUntil < 12*time.Hour || timeUntil > 36*time.Hour {
-		s.logger.Info("The upcoming event isn't within 12-36 hours from now, skipping notification")
+	if timeUntil < 12*time.Hour && timeUntil > 36*time.Hour {
+		s.logger.Info("The upcoming event isn't within 1-36 hours from now, skipping notification",
+			slog.Any("nextEvent.DateTime", nextEvent.DateTime),
+			slog.Any("timeUntil", timeUntil),
+		)
 		return nil
 	}
 

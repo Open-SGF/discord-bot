@@ -40,10 +40,9 @@ func (s *DiscordNotifierService) Notify(ctx context.Context, event *MeetupEvent)
 				Title:       event.Title,
 				Description: event.Description,
 				URL:         event.EventURL,
-				Timestamp:   eventTime.Format(time.RFC3339),
 				Color:       5814783,
 				Fields: []DiscordEmbedField{
-					{Name: "Date", Value: eventTime.Format("Januay 2 2006"), Inline: true},
+					{Name: "Date", Value: eventTime.Format("January 2 2006"), Inline: true},
 					{Name: "Time", Value: eventTime.Format("3:04PM"), Inline: true},
 				},
 			},
