@@ -4,6 +4,7 @@ import (
 	"discord-bot/pkg/infra/customconstructs"
 	"discord-bot/pkg/shared/resource"
 	"fmt"
+
 	"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsevents"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awseventstargets"
@@ -23,7 +24,7 @@ func NewStack(scope constructs.Construct, id string, props *AppStackProps) awscd
 	stack := awscdk.NewStack(scope, jsii.String(stackName.FullName()), &props.StackProps)
 
 	commonEnvVars := map[string]*string{
-		"LOG_LEVEL": jsii.String("debug"),
+		"LOG_LEVEL": jsii.String("info"),
 		"LOG_TYPE":  jsii.String("json"),
 	}
 
