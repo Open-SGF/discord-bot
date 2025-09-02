@@ -1,9 +1,10 @@
 package clock
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTimeSourceImplementations(t *testing.T) {

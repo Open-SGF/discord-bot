@@ -4,11 +4,12 @@ import (
 	"context"
 	"discord-bot/pkg/shared/logging"
 	"errors"
+	"log/slog"
+	"strings"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/spf13/viper"
-	"log/slog"
-	"strings"
 )
 
 type configProcessor func(ctx context.Context, v *viper.Viper) error

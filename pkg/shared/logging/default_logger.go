@@ -2,11 +2,12 @@ package logging
 
 import (
 	"context"
+	"log/slog"
+	"os"
+
 	"github.com/getsentry/sentry-go"
 	slogSentry "github.com/getsentry/sentry-go/slog"
 	slogmulti "github.com/samber/slog-multi"
-	"log/slog"
-	"os"
 )
 
 type Config struct {

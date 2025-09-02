@@ -4,9 +4,10 @@ import (
 	"context"
 	"discord-bot/pkg/shared/appconfig"
 	"fmt"
+	"strings"
+
 	"github.com/google/wire"
 	"github.com/spf13/viper"
-	"strings"
 )
 
 const (
