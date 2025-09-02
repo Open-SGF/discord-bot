@@ -20,7 +20,7 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v7
         with:
-          version: v2.1.2
+          version: v2.4.0
           args: cmd/... pkg/...
       - name: go test
         run: go test -coverprofile=coverage.out -p=1 ./cmd/... ./pkg/...

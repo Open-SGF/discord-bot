@@ -41,4 +41,7 @@ func (m *MockTimeSource) Reset() {
 	m.currentTime = m.initialTime
 }
 
-var RealClockProvider = wire.NewSet(wire.Bind(new(TimeSource), new(*RealTimeSource)), NewRealTimeSource)
+var RealClockProvider = wire.NewSet(
+	wire.Bind(new(TimeSource), new(*RealTimeSource)),
+	NewRealTimeSource,
+)

@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"discord-bot/pkg/worker"
 	"log"
 	"time"
 
+	"discord-bot/pkg/worker"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
@@ -16,7 +16,6 @@ func init() {
 	defer cancel()
 
 	newService, err := worker.InitService(ctx)
-
 	if err != nil {
 		log.Fatal(err)
 	}

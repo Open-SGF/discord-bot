@@ -3,12 +3,13 @@ package worker
 import (
 	"bytes"
 	"context"
-	"discord-bot/pkg/shared/models"
-	"discord-bot/pkg/worker/workerconfig"
 	"encoding/json"
 	"errors"
 	"log/slog"
 	"net/http"
+
+	"discord-bot/pkg/shared/models"
+	"discord-bot/pkg/worker/workerconfig"
 )
 
 const meetupGroup = "open-sgf"
@@ -25,7 +26,11 @@ type SgfMeetupApiEventService struct {
 	logger       *slog.Logger
 }
 
-func NewMeetupEventService(config *workerconfig.Config, httpClient *http.Client, logger *slog.Logger) *SgfMeetupApiEventService {
+func NewMeetupEventService(
+	config *workerconfig.Config,
+	httpClient *http.Client,
+	logger *slog.Logger,
+) *SgfMeetupApiEventService {
 	return &SgfMeetupApiEventService{
 		httpClient:   httpClient,
 		logger:       logger.WithGroup("SgfMeetupApiEventService"),
@@ -37,7 +42,6 @@ func NewMeetupEventService(config *workerconfig.Config, httpClient *http.Client,
 
 func (s *SgfMeetupApiEventService) GetNextEvent(ctx context.Context) (*models.MeetupEvent, error) {
 	authToken, err := s.getAuthToken(ctx)
-
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +52,6 @@ func (s *SgfMeetupApiEventService) GetNextEvent(ctx context.Context) (*models.Me
 		s.baseURL+"/v1/groups/"+meetupGroup+"/events/next",
 		nil,
 	)
-
 	if err != nil {
 		s.logger.Error("failed to create http request", slog.Any("error", err))
 		return nil, ErrMeetupEventFetch
@@ -59,7 +62,6 @@ func (s *SgfMeetupApiEventService) GetNextEvent(ctx context.Context) (*models.Me
 	req.Header.Add("Authorization", "Bearer "+authToken)
 
 	resp, err := s.httpClient.Do(req)
-
 	if err != nil {
 		s.logger.Error("failed to execute http request", slog.Any("error", err))
 		return nil, ErrMeetupEventFetch
@@ -68,7 +70,10 @@ func (s *SgfMeetupApiEventService) GetNextEvent(ctx context.Context) (*models.Me
 	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
-		s.logger.Error("unexpected http status code when fetching event", slog.Int("statusCode", resp.StatusCode))
+		s.logger.Error(
+			"unexpected http status code when fetching event",
+			slog.Int("statusCode", resp.StatusCode),
+		)
 		return nil, ErrMeetupEventFetch
 	}
 
@@ -98,7 +103,6 @@ func (s *SgfMeetupApiEventService) getAuthToken(ctx context.Context) (string, er
 	}
 
 	jsonData, err := json.Marshal(authRequest)
-
 	if err != nil {
 		s.logger.Error("failed to marshal json", slog.Any("error", err))
 		return "", ErrMeetupAuth
@@ -110,7 +114,6 @@ func (s *SgfMeetupApiEventService) getAuthToken(ctx context.Context) (string, er
 		s.baseURL+"/v1/auth",
 		bytes.NewBuffer(jsonData),
 	)
-
 	if err != nil {
 		s.logger.Error("failed to create http request", slog.Any("error", err))
 		return "", ErrMeetupAuth
@@ -120,7 +123,6 @@ func (s *SgfMeetupApiEventService) getAuthToken(ctx context.Context) (string, er
 	req.Header.Add("Accept", "application/json")
 
 	resp, err := s.httpClient.Do(req)
-
 	if err != nil {
 		s.logger.Error("failed to execute http request", slog.Any("error", err))
 		return "", ErrMeetupAuth
@@ -129,7 +131,10 @@ func (s *SgfMeetupApiEventService) getAuthToken(ctx context.Context) (string, er
 	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
-		s.logger.Error("unexpected http status code when fetching auth token", slog.Int("statusCode", resp.StatusCode))
+		s.logger.Error(
+			"unexpected http status code when fetching auth token",
+			slog.Int("statusCode", resp.StatusCode),
+		)
 		return "", ErrMeetupAuth
 	}
 
@@ -143,5 +148,7 @@ func (s *SgfMeetupApiEventService) getAuthToken(ctx context.Context) (string, er
 	return authResponse.AccessToken, nil
 }
 
-var ErrMeetupAuth = errors.New("meetup auth failed")
-var ErrMeetupEventFetch = errors.New("failed to get meetup event")
+var (
+	ErrMeetupAuth       = errors.New("meetup auth failed")
+	ErrMeetupEventFetch = errors.New("failed to get meetup event")
+)

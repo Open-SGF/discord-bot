@@ -32,7 +32,7 @@ func TestNewConfig(t *testing.T) {
 			appEnvKey + "=staging",
 		}, "\n")
 
-		require.NoError(t, os.WriteFile(envPath, []byte(envContent), 0600))
+		require.NoError(t, os.WriteFile(envPath, []byte(envContent), 0o600))
 
 		origDir, err := os.Getwd()
 		require.NoError(t, err)

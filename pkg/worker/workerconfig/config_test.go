@@ -2,12 +2,12 @@ package workerconfig
 
 import (
 	"context"
-	"discord-bot/pkg/shared/appconfig"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 
+	"discord-bot/pkg/shared/appconfig"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -42,7 +42,7 @@ func TestNewConfig(t *testing.T) {
 			discordWebhookURL + "=test-discord-web",
 		}, "\n")
 
-		require.NoError(t, os.WriteFile(envPath, []byte(envContent), 0600))
+		require.NoError(t, os.WriteFile(envPath, []byte(envContent), 0o600))
 
 		origDir, err := os.Getwd()
 		require.NoError(t, err)

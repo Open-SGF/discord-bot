@@ -2,15 +2,15 @@ package worker
 
 import (
 	"context"
-	"discord-bot/pkg/shared/fakers"
-	"discord-bot/pkg/shared/logging"
-	"discord-bot/pkg/worker/workerconfig"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
 
+	"discord-bot/pkg/shared/fakers"
+	"discord-bot/pkg/shared/logging"
+	"discord-bot/pkg/worker/workerconfig"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

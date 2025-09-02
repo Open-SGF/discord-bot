@@ -2,10 +2,10 @@ package workerconfig
 
 import (
 	"context"
-	"discord-bot/pkg/shared/appconfig"
 	"fmt"
 	"strings"
 
+	"discord-bot/pkg/shared/appconfig"
 	"github.com/google/wire"
 	"github.com/spf13/viper"
 )
@@ -25,7 +25,7 @@ var configKeys = []string{
 }
 
 type Config struct {
-	appconfig.Common         `mapstructure:",squash"`
+	appconfig.Common         `       mapstructure:",squash"`
 	SGFMeetupAPIURL          string `mapstructure:"sgf_meetup_api_url"`
 	SGFMeetupAPIClientID     string `mapstructure:"sgf_meetup_api_client_id"`
 	SGFMeetupAPIClientSecret string `mapstructure:"sgf_meetup_api_client_secret"`
@@ -47,7 +47,6 @@ func NewConfig(ctx context.Context, awsConfigFactory appconfig.AwsConfigManager)
 		}).
 		WithCustomProcessor(setDefaults).
 		Parse(ctx, &config)
-
 	if err != nil {
 		return nil, err
 	}
@@ -87,4 +86,8 @@ func (config *Config) validate() error {
 	return nil
 }
 
-var ConfigProviders = wire.NewSet(appconfig.ConfigProviders, wire.FieldsOf(new(*Config), "Common"), NewConfig)
+var ConfigProviders = wire.NewSet(
+	appconfig.ConfigProviders,
+	wire.FieldsOf(new(*Config), "Common"),
+	NewConfig,
+)

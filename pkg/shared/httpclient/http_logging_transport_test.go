@@ -1,14 +1,14 @@
 package httpclient
 
 import (
-	"discord-bot/pkg/shared/clock"
-	"discord-bot/pkg/shared/logging"
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
 
+	"discord-bot/pkg/shared/clock"
+	"discord-bot/pkg/shared/logging"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

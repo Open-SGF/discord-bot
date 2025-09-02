@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"discord-bot/pkg/infra"
-	"discord-bot/pkg/infra/infraconfig"
 	"log"
 
+	"discord-bot/pkg/infra"
+	"discord-bot/pkg/infra/infraconfig"
 	"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/aws/jsii-runtime-go"
 )
@@ -14,7 +14,6 @@ func main() {
 	defer jsii.Close()
 
 	config, err := infraconfig.NewConfig(context.Background())
-
 	if err != nil {
 		log.Println(err)
 	}

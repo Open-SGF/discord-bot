@@ -16,7 +16,6 @@ type Config struct {
 }
 
 func DefaultLogger(context context.Context, config Config) *slog.Logger {
-
 	handlers := make([]slog.Handler, 0, 2)
 
 	opts := &slog.HandlerOptions{

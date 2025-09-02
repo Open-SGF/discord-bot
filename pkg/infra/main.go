@@ -1,10 +1,10 @@
 package infra
 
 import (
-	"discord-bot/pkg/infra/customconstructs"
-	"discord-bot/pkg/shared/resource"
 	"fmt"
 
+	"discord-bot/pkg/infra/customconstructs"
+	"discord-bot/pkg/shared/resource"
 	"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsevents"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awseventstargets"
@@ -32,24 +32,41 @@ func NewStack(scope constructs.Construct, id string, props *AppStackProps) awscd
 
 	workerSSMPath := "/discord-bot/" + workerFunctionName.FullName()
 
-	workerFunction := customconstructs.NewGoLambdaFunction(stack, jsii.String(workerFunctionName.Name()), &customconstructs.GoLambdaFunctionProps{
-		CodePath:     jsii.String("./cmd/worker"),
-		FunctionName: jsii.String(workerFunctionName.FullName()),
-		Environment: mergeMaps(commonEnvVars, map[string]*string{
-			"SSM_PATH": jsii.String(workerSSMPath),
-		}),
-	})
+	workerFunction := customconstructs.NewGoLambdaFunction(
+		stack,
+		jsii.String(workerFunctionName.Name()),
+		&customconstructs.GoLambdaFunctionProps{
+			CodePath:     jsii.String("./cmd/worker"),
+			FunctionName: jsii.String(workerFunctionName.FullName()),
+			Environment: mergeMaps(commonEnvVars, map[string]*string{
+				"SSM_PATH": jsii.String(workerSSMPath),
+			}),
+		},
+	)
 
 	//nolint:staticcheck
 	workerFunction.Function.AddToRolePolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
-		Effect:    awsiam.Effect_ALLOW,
-		Actions:   jsii.Strings("ssm:GetParameter", "ssm:GetParametersByPath"),
-		Resources: jsii.Strings(fmt.Sprintf("arn:aws:ssm:%s:%s:parameter%s*", *awscdk.Aws_REGION(), *awscdk.Aws_ACCOUNT_ID(), workerSSMPath)),
+		Effect:  awsiam.Effect_ALLOW,
+		Actions: jsii.Strings("ssm:GetParameter", "ssm:GetParametersByPath"),
+		Resources: jsii.Strings(
+			fmt.Sprintf(
+				"arn:aws:ssm:%s:%s:parameter%s*",
+				*awscdk.Aws_REGION(),
+				*awscdk.Aws_ACCOUNT_ID(),
+				workerSSMPath,
+			),
+		),
 	}))
 
-	workerScheduleRule := awsevents.NewRule(stack, jsii.String("WorkerEventBridgeRule"), &awsevents.RuleProps{
-		Schedule: awsevents.Schedule_Expression(jsii.String("cron(0 15 * * ? *)")), // every 2 hours
-	})
+	workerScheduleRule := awsevents.NewRule(
+		stack,
+		jsii.String("WorkerEventBridgeRule"),
+		&awsevents.RuleProps{
+			Schedule: awsevents.Schedule_Expression(
+				jsii.String("cron(0 15 * * ? *)"),
+			), // every 2 hours
+		},
+	)
 
 	workerScheduleRule.AddTarget(awseventstargets.NewLambdaFunction(
 		workerFunction.Function,

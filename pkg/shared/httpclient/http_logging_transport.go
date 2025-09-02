@@ -2,11 +2,12 @@ package httpclient
 
 import (
 	"bytes"
-	"discord-bot/pkg/shared/clock"
 	"io"
 	"log/slog"
 	"net/http"
 	"time"
+
+	"discord-bot/pkg/shared/clock"
 )
 
 func NewHttpLoggingTransport(timeSource clock.TimeSource, logger *slog.Logger) http.RoundTripper {

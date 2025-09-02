@@ -2,8 +2,8 @@ package appconfig
 
 import (
 	"context"
-	"discord-bot/pkg/shared/logging"
 
+	"discord-bot/pkg/shared/logging"
 	"github.com/google/wire"
 )
 
@@ -65,7 +65,6 @@ func NewCommonConfig(ctx context.Context) (*Common, error) {
 		WithEnvFile(".", ".env").
 		WithEnvVars().
 		Parse(ctx, &config)
-
 	if err != nil {
 		return nil, err
 	}

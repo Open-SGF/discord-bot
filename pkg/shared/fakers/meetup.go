@@ -1,9 +1,9 @@
 package fakers
 
 import (
-	"discord-bot/pkg/shared/models"
 	"time"
 
+	"discord-bot/pkg/shared/models"
 	"github.com/brianvoe/gofakeit/v7"
 )
 

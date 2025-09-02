@@ -1,9 +1,10 @@
 package httpclient
 
 import (
-	"discord-bot/pkg/shared/clock"
 	"log/slog"
 	"net/http"
+
+	"discord-bot/pkg/shared/clock"
 )
 
 func DefaultClient(timeSource clock.TimeSource, logger *slog.Logger) *http.Client {

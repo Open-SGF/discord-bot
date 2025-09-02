@@ -2,10 +2,11 @@ package worker
 
 import (
 	"context"
-	"discord-bot/pkg/shared/clock"
 	"fmt"
 	"log/slog"
 	"time"
+
+	"discord-bot/pkg/shared/clock"
 )
 
 type Service struct {
@@ -15,7 +16,12 @@ type Service struct {
 	logger                 *slog.Logger
 }
 
-func NewService(meetupEventService MeetupEventService, discordNotifierService DiscordNotifierService, timeSource clock.TimeSource, logger *slog.Logger) *Service {
+func NewService(
+	meetupEventService MeetupEventService,
+	discordNotifierService DiscordNotifierService,
+	timeSource clock.TimeSource,
+	logger *slog.Logger,
+) *Service {
 	return &Service{
 		meetupEventService:     meetupEventService,
 		discordNotifierService: discordNotifierService,
@@ -26,7 +32,6 @@ func NewService(meetupEventService MeetupEventService, discordNotifierService Di
 
 func (s *Service) Execute(ctx context.Context) error {
 	nextEvent, err := s.meetupEventService.GetNextEvent(ctx)
-
 	if err != nil {
 		s.logger.Error("failed to get next event from meetup api", slog.Any("error", err))
 		return err

@@ -3,13 +3,14 @@ package worker
 import (
 	"bytes"
 	"context"
-	"discord-bot/pkg/shared/models"
-	"discord-bot/pkg/worker/workerconfig"
 	"encoding/json"
 	"errors"
 	"log/slog"
 	"net/http"
 	"time"
+
+	"discord-bot/pkg/shared/models"
+	"discord-bot/pkg/worker/workerconfig"
 )
 
 type DiscordNotifierService interface {
@@ -22,7 +23,11 @@ type HttpDiscordNotifierService struct {
 	logger     *slog.Logger
 }
 
-func NewDiscordNotifierService(config *workerconfig.Config, httpClient *http.Client, logger *slog.Logger) *HttpDiscordNotifierService {
+func NewDiscordNotifierService(
+	config *workerconfig.Config,
+	httpClient *http.Client,
+	logger *slog.Logger,
+) *HttpDiscordNotifierService {
 	return &HttpDiscordNotifierService{
 		httpClient: httpClient,
 		webhookURL: config.DiscordWebhookURL,
@@ -59,7 +64,6 @@ func (s *HttpDiscordNotifierService) Notify(ctx context.Context, event *models.M
 	}
 
 	jsonData, err := json.Marshal(discordReq)
-
 	if err != nil {
 		s.logger.Error("failed to marshal json", slog.Any("error", err))
 		return ErrDiscordNotify
@@ -71,7 +75,6 @@ func (s *HttpDiscordNotifierService) Notify(ctx context.Context, event *models.M
 		s.webhookURL,
 		bytes.NewBuffer(jsonData),
 	)
-
 	if err != nil {
 		s.logger.Error("failed to create http request", slog.Any("error", err))
 		return ErrDiscordNotify
@@ -81,7 +84,6 @@ func (s *HttpDiscordNotifierService) Notify(ctx context.Context, event *models.M
 	req.Header.Add("Accept", "application/json")
 
 	resp, err := s.httpClient.Do(req)
-
 	if err != nil {
 		s.logger.Error("failed to execute http request", slog.Any("error", err))
 		return ErrDiscordNotify
@@ -90,12 +92,17 @@ func (s *HttpDiscordNotifierService) Notify(ctx context.Context, event *models.M
 	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusNoContent {
-		s.logger.Error("unexpected http status code when notifying discord", slog.Int("statusCode", resp.StatusCode))
+		s.logger.Error(
+			"unexpected http status code when notifying discord",
+			slog.Int("statusCode", resp.StatusCode),
+		)
 		return ErrDiscordNotify
 	}
 
 	return nil
 }
 
-var ErrMissingDate = errors.New("event or event datetime is null")
-var ErrDiscordNotify = errors.New("error notifying discord")
+var (
+	ErrMissingDate   = errors.New("event or event datetime is null")
+	ErrDiscordNotify = errors.New("error notifying discord")
+)
