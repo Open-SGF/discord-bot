@@ -10,6 +10,7 @@ import (
 	"discord-bot/pkg/shared/httpclient"
 	"discord-bot/pkg/shared/logging"
 	"discord-bot/pkg/worker/workerconfig"
+
 	"github.com/google/wire"
 )
 
