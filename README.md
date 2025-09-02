@@ -1,12 +1,7 @@
-# Welcome to your CDK Go project!
+# Open SGF Discord Bot
 
-This is a blank project for CDK development with Go.
+[![codecov](https://codecov.io/gh/Open-SGF/discord-bot/graph/badge.svg?token=6YQN42YNI3)](https://codecov.io/gh/Open-SGF/discord-bot)
 
-The `cdk.json` file tells the CDK toolkit how to execute your app.
+This bot is written in Go and deployed to AWS Lambda.
+It uses the [SGF Meetup API](https://github.com/Open-SGF/sgf-meetup-api) to get the next Meetup event for Open SGF and posts the details to Discord
 
-## Useful commands
-
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
- * `go test`         run unit tests
