@@ -165,7 +165,7 @@ func TestMeetupEventService_getAuthToken_Success(t *testing.T) {
 		authResponse := meetupAuthResponse{AccessToken: expectedToken}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(authResponse)
+		_ = json.NewEncoder(w).Encode(authResponse)
 	}))
 	defer server.Close()
 
