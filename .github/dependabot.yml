@@ -3,35 +3,35 @@ updates:
   - package-ecosystem: gomod
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
     groups:
       gomod:
         patterns: ["*"]
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
     groups:
       npm:
         patterns: ["*"]
   - package-ecosystem: docker
     directory: /pkg/infra
     schedule:
-      interval: weekly
+      interval: monthly
     groups:
       docker:
         patterns: [ "*" ]
   - package-ecosystem: docker-compose
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
     groups:
       docker:
         patterns: [ "*" ]
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
     target-branch: development
     groups:
       actions:
