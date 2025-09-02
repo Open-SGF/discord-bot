@@ -1,8 +1,9 @@
 package clock
 
 import (
-	"github.com/google/wire"
 	"time"
+
+	"github.com/google/wire"
 )
 
 type TimeSource interface {

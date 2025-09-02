@@ -9,13 +9,13 @@ import (
 )
 
 type Service struct {
-	meetupEventService     *MeetupEventService
-	discordNotifierService *DiscordNotifierService
+	meetupEventService     MeetupEventService
+	discordNotifierService DiscordNotifierService
 	timeSource             clock.TimeSource
 	logger                 *slog.Logger
 }
 
-func NewService(meetupEventService *MeetupEventService, discordNotifierService *DiscordNotifierService, timeSource clock.TimeSource, logger *slog.Logger) *Service {
+func NewService(meetupEventService MeetupEventService, discordNotifierService DiscordNotifierService, timeSource clock.TimeSource, logger *slog.Logger) *Service {
 	return &Service{
 		meetupEventService:     meetupEventService,
 		discordNotifierService: discordNotifierService,
@@ -44,7 +44,7 @@ func (s *Service) Execute(ctx context.Context) error {
 
 	timeUntil := nextEvent.DateTime.Sub(s.timeSource.Now())
 
-	if timeUntil < 12*time.Hour && timeUntil > 36*time.Hour {
+	if timeUntil < 12*time.Hour || timeUntil > 36*time.Hour {
 		s.logger.Info("The upcoming event isn't within 1-36 hours from now, skipping notification",
 			slog.Any("nextEvent.DateTime", nextEvent.DateTime),
 			slog.Any("timeUntil", timeUntil),

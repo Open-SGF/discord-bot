@@ -3,13 +3,14 @@ package httpclient
 import (
 	"discord-bot/pkg/shared/clock"
 	"discord-bot/pkg/shared/logging"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestHttpLoggingTransport_SuccessfulRequest(t *testing.T) {

@@ -9,6 +9,7 @@ import (
 	"discord-bot/pkg/shared/httpclient"
 	"discord-bot/pkg/shared/logging"
 	"discord-bot/pkg/worker/workerconfig"
+
 	"github.com/google/wire"
 )
 
@@ -17,7 +18,9 @@ var CommonProviders = wire.NewSet(workerconfig.ConfigProviders, clock.RealClockP
 func InitService(ctx context.Context) (*Service, error) {
 	panic(wire.Build(
 		CommonProviders,
+		wire.Bind(new(MeetupEventService), new(*SgfMeetupApiEventService)),
 		NewMeetupEventService,
+		wire.Bind(new(DiscordNotifierService), new(*HttpDiscordNotifierService)),
 		NewDiscordNotifierService,
 		NewService,
 	))

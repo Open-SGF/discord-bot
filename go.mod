@@ -11,6 +11,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssm v1.61.0
 	github.com/aws/constructs-go/constructs/v10 v10.4.2
 	github.com/aws/jsii-runtime-go v1.112.0
+	github.com/brianvoe/gofakeit/v7 v7.5.1
 	github.com/getsentry/sentry-go v0.34.1
 	github.com/getsentry/sentry-go/slog v0.34.1
 	github.com/google/wire v0.6.0
@@ -50,6 +51,7 @@ require (
 	github.com/spf13/afero v1.12.0 // indirect
 	github.com/spf13/cast v1.7.1 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
+	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/yuin/goldmark v1.4.13 // indirect
 	go.uber.org/atomic v1.9.0 // indirect

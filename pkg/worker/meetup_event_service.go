@@ -3,6 +3,7 @@ package worker
 import (
 	"bytes"
 	"context"
+	"discord-bot/pkg/shared/models"
 	"discord-bot/pkg/worker/workerconfig"
 	"encoding/json"
 	"errors"
@@ -12,7 +13,11 @@ import (
 
 const meetupGroup = "open-sgf"
 
-type MeetupEventService struct {
+type MeetupEventService interface {
+	GetNextEvent(ctx context.Context) (*models.MeetupEvent, error)
+}
+
+type SgfMeetupApiEventService struct {
 	httpClient   *http.Client
 	baseURL      string
 	clientID     string
@@ -20,17 +25,17 @@ type MeetupEventService struct {
 	logger       *slog.Logger
 }
 
-func NewMeetupEventService(config *workerconfig.Config, httpClient *http.Client, logger *slog.Logger) *MeetupEventService {
-	return &MeetupEventService{
+func NewMeetupEventService(config *workerconfig.Config, httpClient *http.Client, logger *slog.Logger) *SgfMeetupApiEventService {
+	return &SgfMeetupApiEventService{
 		httpClient:   httpClient,
-		logger:       logger.WithGroup("MeetupEventService"),
+		logger:       logger.WithGroup("SgfMeetupApiEventService"),
 		baseURL:      config.SGFMeetupAPIURL,
 		clientID:     config.SGFMeetupAPIClientID,
 		clientSecret: config.SGFMeetupAPIClientSecret,
 	}
 }
 
-func (s *MeetupEventService) GetNextEvent(ctx context.Context) (*MeetupEvent, error) {
+func (s *SgfMeetupApiEventService) GetNextEvent(ctx context.Context) (*models.MeetupEvent, error) {
 	authToken, err := s.getAuthToken(ctx)
 
 	if err != nil {
@@ -67,7 +72,7 @@ func (s *MeetupEventService) GetNextEvent(ctx context.Context) (*MeetupEvent, er
 		return nil, ErrMeetupEventFetch
 	}
 
-	var event MeetupEvent
+	var event models.MeetupEvent
 	err = json.NewDecoder(resp.Body).Decode(&event)
 	if err != nil {
 		s.logger.Error("failed to parse meetup event", slog.Any("error", err))
@@ -86,7 +91,7 @@ type meetupAuthResponse struct {
 	AccessToken string `json:"accessToken"`
 }
 
-func (s *MeetupEventService) getAuthToken(ctx context.Context) (string, error) {
+func (s *SgfMeetupApiEventService) getAuthToken(ctx context.Context) (string, error) {
 	authRequest := meetupAuthRequest{
 		ClientID:     s.clientID,
 		ClientSecret: s.clientSecret,

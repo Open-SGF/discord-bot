@@ -36,6 +36,8 @@ github.com/aws/jsii-runtime-go v1.112.0 h1:7jusWZUgSTuSPLa2ZRv+siGuyoFSzFNk/TaHq
 github.com/aws/jsii-runtime-go v1.112.0/go.mod h1:jiAbLN2Hz+7At3C59LsQyv8gK3HvfNYF2YFPkWLHll8=
 github.com/aws/smithy-go v1.22.5 h1:P9ATCXPMb2mPjYBgueqJNCA5S9UfktsW0tTxi+a7eqw=
 github.com/aws/smithy-go v1.22.5/go.mod h1:t1ufH5HMublsJYulve2RKmHDC15xu1f26kHCp/HgceI=
+github.com/brianvoe/gofakeit/v7 v7.5.1 h1:HJvuVtQFe3TKh+pw8eD+2l7r5eyssfL/wGql5hA9r6U=
+github.com/brianvoe/gofakeit/v7 v7.5.1/go.mod h1:QXuPeBw164PJCzCUZVmgpgHJ3Llj49jSLVkKPMtxtxA=
 github.com/cdklabs/awscdk-asset-awscli-go/awscliv1/v2 v2.2.242 h1:S+uSK6PJ3gbS5imAcMT198W5a/kNbICkpLy0cpV7RO8=
 github.com/cdklabs/awscdk-asset-awscli-go/awscliv1/v2 v2.2.242/go.mod h1:1FHlu1VKVvrE/Bmcow4crPddJlOWhEXde/Zi4TcUhkA=
 github.com/cdklabs/awscdk-asset-node-proxy-agent-go/nodeproxyagentv6/v2 v2.1.0 h1:kElXjprC8wkpJu58vp+WFH6z0AJw4zitg5iSKJPKe3c=
@@ -104,6 +106,8 @@ github.com/spf13/pflag v1.0.6/go.mod h1:McXfInJRrz4CZXVZOBLb0bTZqETkiAhM9Iw0y3An
 github.com/spf13/viper v1.20.1 h1:ZMi+z/lvLyPSCoNtFCpqjy0S4kPbirhpTMwl8BkW9X4=
 github.com/spf13/viper v1.20.1/go.mod h1:P9Mdzt1zoHIG8m2eZQinpiBjo6kCmZSKBClNNqjJvu4=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
+github.com/stretchr/objx v0.5.2 h1:xuMeJ0Sdp5ZMRXx/aWO6RZxdr3beISkG5/G/aIRr3pY=
+github.com/stretchr/objx v0.5.2/go.mod h1:FRsXN1f5AsAjCGJKqEizvkpNtU+EGNCLh3NxZ/8L+MA=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/stretchr/testify v1.10.0 h1:Xv5erBjTwe/5IxqUQTdXv5kgmIvbHo3QQyRwhJsOfJA=
 github.com/stretchr/testify v1.10.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=

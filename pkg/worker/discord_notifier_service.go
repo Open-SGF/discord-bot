@@ -3,6 +3,7 @@ package worker
 import (
 	"bytes"
 	"context"
+	"discord-bot/pkg/shared/models"
 	"discord-bot/pkg/worker/workerconfig"
 	"encoding/json"
 	"errors"
@@ -11,21 +12,29 @@ import (
 	"time"
 )
 
-type DiscordNotifierService struct {
+type DiscordNotifierService interface {
+	Notify(ctx context.Context, event *models.MeetupEvent) error
+}
+
+type HttpDiscordNotifierService struct {
 	httpClient *http.Client
 	webhookURL string
 	logger     *slog.Logger
 }
 
-func NewDiscordNotifierService(config *workerconfig.Config, httpClient *http.Client, logger *slog.Logger) *DiscordNotifierService {
-	return &DiscordNotifierService{
+func NewDiscordNotifierService(config *workerconfig.Config, httpClient *http.Client, logger *slog.Logger) *HttpDiscordNotifierService {
+	return &HttpDiscordNotifierService{
 		httpClient: httpClient,
 		webhookURL: config.DiscordWebhookURL,
-		logger:     logger.WithGroup("DiscordNotifierService"),
+		logger:     logger.WithGroup("HttpDiscordNotifierService"),
 	}
 }
 
-func (s *DiscordNotifierService) Notify(ctx context.Context, event *MeetupEvent) error {
+func (s *HttpDiscordNotifierService) Notify(ctx context.Context, event *models.MeetupEvent) error {
+	if event == nil || event.DateTime == nil {
+		return ErrMissingDate
+	}
+
 	loc, err := time.LoadLocation("America/Chicago")
 	if err != nil {
 		s.logger.Error("failed to load CST timezone", slog.Any("error", err))
@@ -34,14 +43,14 @@ func (s *DiscordNotifierService) Notify(ctx context.Context, event *MeetupEvent)
 
 	eventTime := event.DateTime.In(loc)
 
-	discordReq := DiscordRequest{
-		Embeds: []DiscordEmbed{
+	discordReq := models.DiscordRequest{
+		Embeds: []models.DiscordEmbed{
 			{
 				Title:       event.Title,
 				Description: event.Description,
 				URL:         event.EventURL,
 				Color:       5814783,
-				Fields: []DiscordEmbedField{
+				Fields: []models.DiscordEmbedField{
 					{Name: "Date", Value: eventTime.Format("January 2 2006"), Inline: true},
 					{Name: "Time", Value: eventTime.Format("3:04PM"), Inline: true},
 				},
@@ -88,4 +97,5 @@ func (s *DiscordNotifierService) Notify(ctx context.Context, event *MeetupEvent)
 	return nil
 }
 
+var ErrMissingDate = errors.New("event or event datetime is null")
 var ErrDiscordNotify = errors.New("error notifying discord")

@@ -1,9 +1,10 @@
 package logging
 
 import (
-	"github.com/stretchr/testify/assert"
 	"log/slog"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestLogTypeToString(t *testing.T) {

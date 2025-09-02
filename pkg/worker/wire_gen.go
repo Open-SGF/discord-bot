@@ -29,9 +29,9 @@ func InitService(ctx context.Context) (*Service, error) {
 	loggingConfig := common.Logging
 	logger := logging.DefaultLogger(ctx, loggingConfig)
 	client := httpclient.DefaultClient(realTimeSource, logger)
-	meetupEventService := NewMeetupEventService(config, client, logger)
-	discordNotifierService := NewDiscordNotifierService(config, client, logger)
-	service := NewService(meetupEventService, discordNotifierService, realTimeSource, logger)
+	sgfMeetupApiEventService := NewMeetupEventService(config, client, logger)
+	httpDiscordNotifierService := NewDiscordNotifierService(config, client, logger)
+	service := NewService(sgfMeetupApiEventService, httpDiscordNotifierService, realTimeSource, logger)
 	return service, nil
 }
 
