@@ -3,9 +3,10 @@ package main
 import (
 	"context"
 	"discord-bot/pkg/worker"
-	"github.com/aws/aws-lambda-go/lambda"
 	"log"
 	"time"
+
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
 var service *worker.Service
