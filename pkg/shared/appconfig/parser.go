@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"discord-bot/pkg/shared/logging"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/spf13/viper"

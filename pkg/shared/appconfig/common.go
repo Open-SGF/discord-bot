@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"discord-bot/pkg/shared/logging"
+
 	"github.com/google/wire"
 )
 

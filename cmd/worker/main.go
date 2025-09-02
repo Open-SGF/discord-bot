@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"discord-bot/pkg/worker"
+
 	"github.com/aws/aws-lambda-go/lambda"
 )
 

@@ -9,6 +9,7 @@ import (
 
 	"discord-bot/pkg/shared/clock"
 	"discord-bot/pkg/shared/logging"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

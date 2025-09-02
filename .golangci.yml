@@ -3,9 +3,11 @@ linters:
   default: standard
 formatters:
   enable:
-    - gci
     - gofmt
     - gofumpt
     - goimports
     - golines
     - swaggo
+  settings:
+    gofumpt:
+      module-path: discord-bot

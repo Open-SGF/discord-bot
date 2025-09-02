@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"discord-bot/pkg/shared/logging"
+
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/spf13/viper"

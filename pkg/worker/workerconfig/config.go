@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"discord-bot/pkg/shared/appconfig"
+
 	"github.com/google/wire"
 	"github.com/spf13/viper"
 )

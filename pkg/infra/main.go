@@ -5,6 +5,7 @@ import (
 
 	"discord-bot/pkg/infra/customconstructs"
 	"discord-bot/pkg/shared/resource"
+
 	"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsevents"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awseventstargets"

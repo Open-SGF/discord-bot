@@ -10,6 +10,7 @@ import (
 	"discord-bot/pkg/shared/fakers"
 	"discord-bot/pkg/shared/logging"
 	"discord-bot/pkg/shared/models"
+
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )

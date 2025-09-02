@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"discord-bot/pkg/shared/models"
+
 	"github.com/brianvoe/gofakeit/v7"
 )
 
