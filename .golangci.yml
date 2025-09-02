@@ -7,7 +7,6 @@ formatters:
     - gofumpt
     - goimports
     - golines
-    - swaggo
   settings:
     gofumpt:
       module-path: discord-bot
