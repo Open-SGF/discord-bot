@@ -29,7 +29,7 @@ func NewStack(scope constructs.Construct, id string, props *AppStackProps) awscd
 		"LOG_TYPE":  jsii.String("json"),
 	}
 
-	workerFunctionName := resource.NewNamer(props.AppEnv, "Worker")
+	workerFunctionName := resource.NewNamer(stackName.FullName(), "Worker")
 
 	workerSSMPath := "/discord-bot/" + workerFunctionName.FullName()
 
