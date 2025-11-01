@@ -32,7 +32,7 @@ updates:
     directory: /
     schedule:
       interval: monthly
-    target-branch: development
+    target-branch: main
     groups:
       actions:
         patterns: [ "*" ]
