@@ -10,7 +10,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.18.20
 	github.com/aws/aws-sdk-go-v2/service/ssm v1.66.3
 	github.com/aws/constructs-go/constructs/v10 v10.4.2
-	github.com/aws/jsii-runtime-go v1.116.0
+	github.com/aws/jsii-runtime-go v1.118.0
 	github.com/brianvoe/gofakeit/v7 v7.8.2
 	github.com/getsentry/sentry-go v0.36.2
 	github.com/getsentry/sentry-go/slog v0.36.2
