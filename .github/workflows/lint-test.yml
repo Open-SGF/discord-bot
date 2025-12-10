@@ -8,7 +8,7 @@ jobs:
   lint-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
@@ -18,7 +18,7 @@ jobs:
           go generate ./...
           git diff --exit-code || (echo "Error: Generated files are out of date. Run 'go generate ./...' and commit changes." && exit 1)
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v8
+        uses: golangci/golangci-lint-action@v9
         with:
           version: v2.4.0
           args: cmd/... pkg/...
