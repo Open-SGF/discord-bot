@@ -1,6 +1,6 @@
 module discord-bot
 
-go 1.25
+go 1.26
 
 require (
 	github.com/aws/aws-cdk-go/awscdk/v2 v2.240.0
