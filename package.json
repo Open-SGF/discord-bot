@@ -19,7 +19,7 @@
   "homepage": "https://github.com/Open-SGF/discord-bot#readme",
   "description": "",
   "devDependencies": {
-    "aws-cdk": "^2.1023.0",
-    "rimraf": "^6.0.1"
+    "aws-cdk": "^2.1143.0",
+    "rimraf": "^6.1.3"
   }
 }
