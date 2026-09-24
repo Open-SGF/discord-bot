@@ -24,7 +24,8 @@ func TestSentryEventHandler(t *testing.T) {
 	logger.InfoContext(ctx, "ignored", "error", errors.New("ignored"))
 	logger.ErrorContext(ctx, "direct", "error", errors.New("direct failure"))
 	logger.With("error", errors.New("bound failure")).ErrorContext(ctx, "bound")
-	logger.WithGroup("request").With("err", errors.New("grouped failure")).ErrorContext(ctx, "grouped")
+	grouped := logger.WithGroup("request").With("err", errors.New("grouped failure"))
+	grouped.ErrorContext(ctx, "grouped")
 	logger.ErrorContext(ctx, "message only")
 
 	events := transport.Events()
