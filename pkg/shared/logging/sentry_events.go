@@ -2,10 +2,7 @@ package logging
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
-	"runtime"
-	"strings"
 
 	"github.com/getsentry/sentry-go"
 )
@@ -13,8 +10,7 @@ import (
 // sentryEventHandler keeps error logs visible as Sentry issues. The current
 // sentry-go/slog handler sends logs, but no longer creates issue events.
 type sentryEventHandler struct {
-	attrs  []slog.Attr
-	groups []string
+	attrs []slog.Attr
 }
 
 func (h sentryEventHandler) Enabled(_ context.Context, level slog.Level) bool {
@@ -27,49 +23,43 @@ func (h sentryEventHandler) Handle(ctx context.Context, record slog.Record) erro
 		hub = sentry.CurrentHub()
 	}
 
-	event := sentry.NewEvent()
-	event.Timestamp = record.Time.UTC()
-	event.Level = sentry.LevelError
-	event.Message = record.Message
-	event.Logger = "slog"
-	if fn := runtime.FuncForPC(record.PC); fn != nil {
-		file, line := fn.FileLine(record.PC)
-		event.Tags["source"] = fmt.Sprintf("%s:%d", file, line)
+	client := hub.Client()
+	if client == nil {
+		return nil
 	}
 
-	add := func(attr slog.Attr, groups []string) {
-		attr.Value = attr.Value.Resolve()
-		if (attr.Key == "error" || attr.Key == "err") && attr.Value.Kind() == slog.KindAny {
-			if err, ok := attr.Value.Any().(error); ok {
-				event.SetException(err, 100)
-				return
+	var logErr error
+	findError := func(attr slog.Attr) bool {
+		if attr.Key == "error" || attr.Key == "err" {
+			if err, ok := attr.Value.Resolve().Any().(error); ok && err != nil {
+				logErr = err
 			}
 		}
-		event.Tags[strings.Join(append(groups, attr.Key), ".")] = fmt.Sprint(attr.Value.Any())
+		return true
 	}
 	for _, attr := range h.attrs {
-		add(attr, nil)
+		findError(attr)
 	}
-	record.Attrs(func(attr slog.Attr) bool {
-		add(attr, h.groups)
-		return true
-	})
-	hub.CaptureEventWithHint(event, &sentry.EventHint{Context: ctx})
+	record.Attrs(findError)
+
+	var event *sentry.Event
+	if logErr != nil {
+		event = client.EventFromException(logErr, sentry.LevelError)
+		event.Message = record.Message
+	} else {
+		event = client.EventFromMessage(record.Message, sentry.LevelError)
+	}
+	event.Timestamp = record.Time.UTC()
+	hub.CaptureEventWithHint(event, &sentry.EventHint{Context: ctx, OriginalException: logErr})
 	return nil
 }
 
 func (h sentryEventHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
-	clone := h
-	clone.attrs = append([]slog.Attr(nil), h.attrs...)
-	for _, attr := range attrs {
-		attr.Key = strings.Join(append(h.groups, attr.Key), ".")
-		clone.attrs = append(clone.attrs, attr)
-	}
-	return clone
+	h.attrs = append(append([]slog.Attr(nil), h.attrs...), attrs...)
+	return h
 }
 
-func (h sentryEventHandler) WithGroup(name string) slog.Handler {
-	clone := h
-	clone.groups = append(append([]string(nil), h.groups...), name)
-	return clone
+// Only error values are used; group names are not needed for issue metadata.
+func (h sentryEventHandler) WithGroup(_ string) slog.Handler {
+	return h
 }
