@@ -7,7 +7,6 @@ import (
 
 	"github.com/getsentry/sentry-go"
 	slogSentry "github.com/getsentry/sentry-go/slog"
-	slogmulti "github.com/samber/slog-multi"
 )
 
 type Config struct {
@@ -33,10 +32,10 @@ func DefaultLogger(context context.Context, config Config) *slog.Logger {
 
 	if sentry.CurrentHub().Client() != nil {
 		handlers = append(handlers, slogSentry.Option{
-			EventLevel: []slog.Level{slog.LevelError},
-			AddSource:  true,
-		}.NewSentryHandler(context))
+			LogLevel:  []slog.Level{slog.LevelError},
+			AddSource: true,
+		}.NewSentryHandler(context), sentryEventHandler{})
 	}
 
-	return slog.New(slogmulti.Fanout(handlers...))
+	return slog.New(slog.NewMultiHandler(handlers...))
 }

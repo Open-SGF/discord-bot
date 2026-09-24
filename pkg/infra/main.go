@@ -2,6 +2,7 @@ package infra
 
 import (
 	"fmt"
+	"maps"
 
 	"discord-bot/pkg/infra/customconstructs"
 	"discord-bot/pkg/shared/resource"
@@ -77,12 +78,10 @@ func NewStack(scope constructs.Construct, id string, props *AppStackProps) awscd
 	return stack
 }
 
-func mergeMaps[M ~map[K]V, K comparable, V any](maps ...M) *M {
+func mergeMaps[M ~map[K]V, K comparable, V any](sources ...M) *M {
 	merged := make(M)
-	for _, m := range maps {
-		for k, v := range m {
-			merged[k] = v
-		}
+	for _, m := range sources {
+		maps.Copy(merged, m)
 	}
 	return &merged
 }
