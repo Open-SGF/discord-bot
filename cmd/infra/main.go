@@ -22,9 +22,7 @@ func main() {
 	app := awscdk.NewApp(nil)
 
 	infra.NewStack(app, "DiscordBot", &infra.AppStackProps{
-		StackProps: awscdk.StackProps{
-			Env: env(),
-		},
+		Env:    env(),
 		AppEnv: config.AppEnv,
 	})
 

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log/slog"
 	"testing"
+	"time"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/stretchr/testify/assert"
@@ -32,18 +33,27 @@ func TestDefaultLogger(t *testing.T) {
 	})
 
 	t.Run("adds sentry sink if sentry is enabled", func(t *testing.T) {
-		_ = sentry.Init(sentry.ClientOptions{})
+		transport := &sentry.MockTransport{}
+		client, err := sentry.NewClient(sentry.ClientOptions{
+			Dsn:       "https://public@example.com/1",
+			Transport: transport,
+		})
+		assert.NoError(t, err)
+		sentry.CurrentHub().BindClient(client)
 		defer sentry.CurrentHub().BindClient(nil)
 
 		// Invalid level to prevent logs from appearing in test output
 		level := slog.LevelError + 1
 		logger := DefaultLogger(context.Background(), Config{Level: level, Type: LogTypeJSON})
 
-		assert.Empty(t, sentry.CurrentHub().LastEventID())
-
 		logger.Error("test error", "error", errors.New("error"))
+		assert.True(t, sentry.Flush(time.Second))
 
-		assert.NotEmpty(t, sentry.CurrentHub().LastEventID())
+		events := transport.Events()
+		if assert.Len(t, events, 1) && assert.Len(t, events[0].Logs, 1) {
+			assert.Equal(t, "test error", events[0].Logs[0].Body)
+			assert.Equal(t, sentry.LogLevelError, events[0].Logs[0].Level)
+		}
 	})
 
 	t.Run("panics for unknown log type", func(t *testing.T) {
