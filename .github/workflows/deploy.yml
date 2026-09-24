@@ -17,6 +17,9 @@ jobs:
     environment: ${{ github.ref_name == 'main' && 'Production' || 'Staging' }}
     steps:
       - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: 'go.mod'
       - uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
@@ -28,8 +31,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
-      - name: Bootstrap CDK
-        run: npm run cdk bootstrap
       - name: CDK Deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
