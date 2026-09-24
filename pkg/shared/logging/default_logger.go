@@ -35,7 +35,7 @@ func DefaultLogger(context context.Context, config Config) *slog.Logger {
 		handlers = append(handlers, slogSentry.Option{
 			LogLevel:  []slog.Level{slog.LevelError},
 			AddSource: true,
-		}.NewSentryHandler(context))
+		}.NewSentryHandler(context), sentryEventHandler{})
 	}
 
 	return slog.New(slogmulti.Fanout(handlers...))

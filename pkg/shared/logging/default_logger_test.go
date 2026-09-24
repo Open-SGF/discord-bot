@@ -46,14 +46,27 @@ func TestDefaultLogger(t *testing.T) {
 		level := slog.LevelError + 1
 		logger := DefaultLogger(context.Background(), Config{Level: level, Type: LogTypeJSON})
 
+		logger.Info("ignored")
 		logger.Error("test error", "error", errors.New("error"))
 		assert.True(t, sentry.Flush(time.Second))
 
 		events := transport.Events()
-		if assert.Len(t, events, 1) && assert.Len(t, events[0].Logs, 1) {
-			assert.Equal(t, "test error", events[0].Logs[0].Body)
-			assert.Equal(t, sentry.LogLevelError, events[0].Logs[0].Level)
+		assert.Len(t, events, 2)
+		var gotLog, gotIssue bool
+		for _, event := range events {
+			if event.Message == "test error" {
+				gotIssue = true
+				assert.Equal(t, sentry.LevelError, event.Level)
+				assert.NotEmpty(t, event.Exception)
+			}
+			if len(event.Logs) == 1 {
+				gotLog = true
+				assert.Equal(t, "test error", event.Logs[0].Body)
+				assert.Equal(t, sentry.LogLevelError, event.Logs[0].Level)
+			}
 		}
+		assert.True(t, gotLog)
+		assert.True(t, gotIssue)
 	})
 
 	t.Run("panics for unknown log type", func(t *testing.T) {
